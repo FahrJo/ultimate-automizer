@@ -1,0 +1,104 @@
+This is Ultimate 0.2.3-release-863304a
+[2023-03-16 17:49:11,576 INFO  L177        SettingsManager]: Resetting all preferences to default values...
+[2023-03-16 17:49:11,580 INFO  L181        SettingsManager]: Resetting UltimateCore preferences to default values
+[2023-03-16 17:49:11,626 INFO  L184        SettingsManager]: Ultimate Commandline Interface provides no preferences, ignoring...
+[2023-03-16 17:49:11,627 INFO  L181        SettingsManager]: Resetting Boogie Preprocessor preferences to default values
+[2023-03-16 17:49:11,628 INFO  L181        SettingsManager]: Resetting Boogie Procedure Inliner preferences to default values
+[2023-03-16 17:49:11,633 INFO  L181        SettingsManager]: Resetting Abstract Interpretation preferences to default values
+[2023-03-16 17:49:11,637 INFO  L181        SettingsManager]: Resetting LassoRanker preferences to default values
+[2023-03-16 17:49:11,645 INFO  L181        SettingsManager]: Resetting Reaching Definitions preferences to default values
+[2023-03-16 17:49:11,647 INFO  L181        SettingsManager]: Resetting SyntaxChecker preferences to default values
+[2023-03-16 17:49:11,648 INFO  L181        SettingsManager]: Resetting Sifa preferences to default values
+[2023-03-16 17:49:11,651 INFO  L184        SettingsManager]: Büchi Program Product provides no preferences, ignoring...
+[2023-03-16 17:49:11,652 INFO  L181        SettingsManager]: Resetting LTL2Aut preferences to default values
+[2023-03-16 17:49:11,661 INFO  L181        SettingsManager]: Resetting PEA to Boogie preferences to default values
+[2023-03-16 17:49:11,663 INFO  L181        SettingsManager]: Resetting BlockEncodingV2 preferences to default values
+[2023-03-16 17:49:11,665 INFO  L181        SettingsManager]: Resetting ChcToBoogie preferences to default values
+[2023-03-16 17:49:11,673 INFO  L181        SettingsManager]: Resetting AutomataScriptInterpreter preferences to default values
+[2023-03-16 17:49:11,676 INFO  L181        SettingsManager]: Resetting BuchiAutomizer preferences to default values
+[2023-03-16 17:49:11,681 INFO  L181        SettingsManager]: Resetting CACSL2BoogieTranslator preferences to default values
+[2023-03-16 17:49:11,685 INFO  L181        SettingsManager]: Resetting CodeCheck preferences to default values
+[2023-03-16 17:49:11,689 INFO  L181        SettingsManager]: Resetting InvariantSynthesis preferences to default values
+[2023-03-16 17:49:11,697 INFO  L181        SettingsManager]: Resetting RCFGBuilder preferences to default values
+[2023-03-16 17:49:11,699 INFO  L181        SettingsManager]: Resetting Referee preferences to default values
+[2023-03-16 17:49:11,702 INFO  L181        SettingsManager]: Resetting TraceAbstraction preferences to default values
+[2023-03-16 17:49:11,709 INFO  L184        SettingsManager]: TraceAbstractionConcurrent provides no preferences, ignoring...
+[2023-03-16 17:49:11,710 INFO  L184        SettingsManager]: TraceAbstractionWithAFAs provides no preferences, ignoring...
+[2023-03-16 17:49:11,711 INFO  L181        SettingsManager]: Resetting TreeAutomizer preferences to default values
+[2023-03-16 17:49:11,715 INFO  L181        SettingsManager]: Resetting IcfgToChc preferences to default values
+[2023-03-16 17:49:11,716 INFO  L181        SettingsManager]: Resetting IcfgTransformer preferences to default values
+[2023-03-16 17:49:11,720 INFO  L184        SettingsManager]: ReqToTest provides no preferences, ignoring...
+[2023-03-16 17:49:11,720 INFO  L181        SettingsManager]: Resetting Boogie Printer preferences to default values
+[2023-03-16 17:49:11,723 INFO  L181        SettingsManager]: Resetting ChcSmtPrinter preferences to default values
+[2023-03-16 17:49:11,726 INFO  L181        SettingsManager]: Resetting ReqPrinter preferences to default values
+[2023-03-16 17:49:11,729 INFO  L181        SettingsManager]: Resetting Witness Printer preferences to default values
+[2023-03-16 17:49:11,730 INFO  L184        SettingsManager]: Boogie PL CUP Parser provides no preferences, ignoring...
+[2023-03-16 17:49:11,731 INFO  L181        SettingsManager]: Resetting CDTParser preferences to default values
+[2023-03-16 17:49:11,733 INFO  L184        SettingsManager]: AutomataScriptParser provides no preferences, ignoring...
+[2023-03-16 17:49:11,733 INFO  L184        SettingsManager]: ReqParser provides no preferences, ignoring...
+[2023-03-16 17:49:11,733 INFO  L181        SettingsManager]: Resetting SmtParser preferences to default values
+[2023-03-16 17:49:11,735 INFO  L181        SettingsManager]: Resetting Witness Parser preferences to default values
+[2023-03-16 17:49:11,738 INFO  L188        SettingsManager]: Finished resetting all preferences to default values...
+[2023-03-16 17:49:11,740 INFO  L101        SettingsManager]: Beginning loading settings from /home/userfiles/ultimate-automizer_settings.epl
+[2023-03-16 17:49:11,759 INFO  L113        SettingsManager]: Loading preferences was successful
+[2023-03-16 17:49:11,760 INFO  L115        SettingsManager]: Preferences different from defaults after loading the file:
+[2023-03-16 17:49:11,761 INFO  L136        SettingsManager]: Preferences of Boogie Preprocessor differ from their defaults:
+[2023-03-16 17:49:11,761 INFO  L138        SettingsManager]:  * Simplify expressions=true
+[2023-03-16 17:49:11,764 INFO  L136        SettingsManager]: Preferences of CACSL2BoogieTranslator differ from their defaults:
+[2023-03-16 17:49:11,764 INFO  L138        SettingsManager]:  * Check division by zero=IGNORE
+[2023-03-16 17:49:11,764 INFO  L138        SettingsManager]:  * Pointer to allocated memory at dereference=IGNORE
+[2023-03-16 17:49:11,764 INFO  L138        SettingsManager]:  * If two pointers are subtracted or compared they have the same base address=IGNORE
+[2023-03-16 17:49:11,765 INFO  L138        SettingsManager]:  * Check array bounds for arrays that are off heap=IGNORE
+[2023-03-16 17:49:11,765 INFO  L138        SettingsManager]:  * Check if freed pointer was valid=false
+[2023-03-16 17:49:11,765 INFO  L138        SettingsManager]:  * How to treat unsigned ints differently from normal ones=IGNORE
+[2023-03-16 17:49:11,765 INFO  L138        SettingsManager]:  * Pointer base address is valid at dereference=IGNORE
+[2023-03-16 17:49:12,075 INFO  L75    nceAwareModelManager]: Repository-Root is: /tmp
+[2023-03-16 17:49:12,113 INFO  L261   ainManager$Toolchain]: [Toolchain 1]: Applicable parser(s) successfully (re)initialized
+[2023-03-16 17:49:12,117 INFO  L217   ainManager$Toolchain]: [Toolchain 1]: Toolchain selected.
+[2023-03-16 17:49:12,119 INFO  L271        PluginConnector]: Initializing CDTParser...
+[2023-03-16 17:49:12,139 INFO  L275        PluginConnector]: CDTParser initialized
+[2023-03-16 17:49:12,142 INFO  L432   ainManager$Toolchain]: [Toolchain 1]: Parsing single file: /home/userfiles/send_ioctl_verification.c
+!SESSION 2023-03-16 17:49:09.133 -----------------------------------------------
+eclipse.buildId=unknown
+java.version=11.0.18
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=linux, ARCH=x86_64, WS=gtk, NL=en_US
+Framework arguments:  --console -tc userfiles/ultimate-automizer_toolchain.xml -s userfiles/ultimate-automizer_settings.epl -i userfiles/send_ioctl_verification.c
+Command-line arguments:  -os linux -ws gtk -arch x86_64 -consoleLog --console -data @user.home/.ultimate -tc userfiles/ultimate-automizer_toolchain.xml -s userfiles/ultimate-automizer_settings.epl -i userfiles/send_ioctl_verification.c
+
+!ENTRY org.eclipse.cdt.core 1 0 2023-03-16 17:49:12.540
+!MESSAGE Indexed 'FLAG0770dfa01' (0 sources, 0 headers) in 0.002 sec: 0 declarations; 0 references; 0 unresolved inclusions; 0 syntax errors; 0 unresolved names (0%)
+[2023-03-16 17:49:13,652 INFO  L500              CDTParser]: Created temporary CDT project at NULL
+[2023-03-16 17:49:13,886 INFO  L351              CDTParser]: Found 1 translation units.
+[2023-03-16 17:49:13,887 INFO  L172              CDTParser]: Scanning /home/userfiles/send_ioctl_verification.c
+[2023-03-16 17:49:13,936 INFO  L394              CDTParser]: About to delete temporary CDT project at /root/.ultimate/80535ab7044a4acd80aa1ac80712f706/FLAG0770dfa01
+[2023-03-16 17:49:13,961 INFO  L402              CDTParser]: Successfully deleted /root/.ultimate/80535ab7044a4acd80aa1ac80712f706
+[2023-03-16 17:49:13,965 INFO  L299   ainManager$Toolchain]: ####################### [Toolchain 1] #######################
+[2023-03-16 17:49:13,972 INFO  L131        ToolchainWalker]: Walking toolchain with 4 elements.
+[2023-03-16 17:49:13,980 INFO  L113        PluginConnector]: ------------------------CACSL2BoogieTranslator----------------------------
+[2023-03-16 17:49:13,980 INFO  L271        PluginConnector]: Initializing CACSL2BoogieTranslator...
+[2023-03-16 17:49:13,986 INFO  L275        PluginConnector]: CACSL2BoogieTranslator initialized
+[2023-03-16 17:49:13,990 INFO  L185        PluginConnector]: Executing the observer ACSLObjectContainerObserver from plugin CACSL2BoogieTranslator for "CDTParser AST 16.03 05:49:13" (1/1) ...
+[2023-03-16 17:49:13,993 INFO  L205        PluginConnector]: Invalid model from CACSL2BoogieTranslator for observer de.uni_freiburg.informatik.ultimate.plugins.generator.cacsl2boogietranslator.ACSLObjectContainerObserver@43832d82 and model type de.uni_freiburg.informatik.ultimate.plugins.generator.cacsl2boogietranslator AST 16.03 05:49:13, skipping insertion in model container
+[2023-03-16 17:49:13,994 INFO  L185        PluginConnector]: Executing the observer CACSL2BoogieTranslatorObserver from plugin CACSL2BoogieTranslator for "CDTParser AST 16.03 05:49:13" (1/1) ...
+[2023-03-16 17:49:14,015 INFO  L145         MainTranslator]: Starting translation in SV-COMP mode 
+[2023-03-16 17:49:14,046 INFO  L178         MainTranslator]: Built tables and reachable declarations
+[2023-03-16 17:49:14,204 ERROR L326         MainTranslator]: Unsupported Syntax: CHandler: Not yet implemented: "0" (Type: org.eclipse.cdt.internal.core.dom.parser.c.CASTProblemDeclaration)
+[2023-03-16 17:49:14,205 INFO  L205        PluginConnector]: Invalid model from CACSL2BoogieTranslator for observer de.uni_freiburg.informatik.ultimate.plugins.generator.cacsl2boogietranslator.CACSL2BoogieTranslatorObserver@35b5791c and model type de.uni_freiburg.informatik.ultimate.plugins.generator.cacsl2boogietranslator AST 16.03 05:49:14, skipping insertion in model container
+[2023-03-16 17:49:14,205 INFO  L132        PluginConnector]: ------------------------ END CACSL2BoogieTranslator----------------------------
+[2023-03-16 17:49:14,206 INFO  L184        ToolchainWalker]: Toolchain execution was canceled (user or tool) before executing de.uni_freiburg.informatik.ultimate.boogie.preprocessor
+[2023-03-16 17:49:14,211 INFO  L158              Benchmark]: Toolchain (without parser) took 239.20ms. Allocated memory is still 652.2MB. Free memory was 590.1MB in the beginning and 582.4MB in the end (delta: 7.7MB). Peak memory consumption was 8.4MB. Max. memory is 12.9GB.
+[2023-03-16 17:49:14,212 INFO  L158              Benchmark]: CDTParser took 0.35ms. Allocated memory is still 536.9MB. Free memory was 473.8MB in the beginning and 473.7MB in the end (delta: 179.9kB). There was no memory consumed. Max. memory is 12.9GB.
+[2023-03-16 17:49:14,213 INFO  L158              Benchmark]: CACSL2BoogieTranslator took 226.27ms. Allocated memory is still 652.2MB. Free memory was 589.9MB in the beginning and 582.4MB in the end (delta: 7.6MB). Peak memory consumption was 8.4MB. Max. memory is 12.9GB.
+[2023-03-16 17:49:14,216 INFO  L339   ainManager$Toolchain]: #######################  End [Toolchain 1] #######################
+ --- Results ---
+ * Results from de.uni_freiburg.informatik.ultimate.core:
+  - StatisticsResult: Toolchain Benchmarks
+    Benchmark results are:
+ * CDTParser took 0.35ms. Allocated memory is still 536.9MB. Free memory was 473.8MB in the beginning and 473.7MB in the end (delta: 179.9kB). There was no memory consumed. Max. memory is 12.9GB.
+ * CACSL2BoogieTranslator took 226.27ms. Allocated memory is still 652.2MB. Free memory was 589.9MB in the beginning and 582.4MB in the end (delta: 7.6MB). Peak memory consumption was 8.4MB. Max. memory is 12.9GB.
+ * Results from de.uni_freiburg.informatik.ultimate.plugins.generator.cacsl2boogietranslator:
+  - UnsupportedSyntaxResult [Line: 49]: Unsupported Syntax
+    CHandler: Not yet implemented: "0" (Type: org.eclipse.cdt.internal.core.dom.parser.c.CASTProblemDeclaration)
+RESULT: Ultimate could not prove your program: Toolchain returned no result.
+Received shutdown request...
