@@ -4,6 +4,17 @@
   "description": "This extension runs a formal verification on the current active C file.",
   "version": "0.0.1",
   "publisher": "FahrJo",
+  "contributors": [
+    {
+      "name": "Johannes Fahr",
+      "email": "johannes.fahr@posteo.de"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/FahrJo/ultimate-automizer.git"
+  },
+  "license": "MIT",
   "engines": {
     "vscode": "^1.76.0"
   },
