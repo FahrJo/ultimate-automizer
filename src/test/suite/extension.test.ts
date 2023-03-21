@@ -1,13 +1,8 @@
 import * as assert from 'assert';
-
-// You can import and use all API from the 'vscode' module
-// as well as import your extension to test it
 import * as vscode from 'vscode';
-//import * as ultimateExtension from '../../extension';
+
 
 suite('Ultimate Extension Test Suite', () => {
-	vscode.window.showInformationMessage('Start all tests.');
-	
 	let extensionContext: vscode.ExtensionContext;
 
 	suiteSetup(async () => {
@@ -17,7 +12,6 @@ suite('Ultimate Extension Test Suite', () => {
     });
 
 	test('outputChannelsSubscribedTest', () => {
-		// TODO
 		let logSubscriberOk = false;
 		let outSubscriberOk = false;
 
@@ -28,11 +22,11 @@ suite('Ultimate Extension Test Suite', () => {
 			}
 		});
 		
-		//extensionContext.workspaceState.keys();
 		assert.strictEqual(logSubscriberOk, true);
 		assert.strictEqual(outSubscriberOk, true);
 	});
 });
+
 
 function isOutputChannel(obj: any | vscode.OutputChannel): obj is vscode.OutputChannel {
 	return 'name' in obj;

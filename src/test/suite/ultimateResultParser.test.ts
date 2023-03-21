@@ -1,16 +1,12 @@
 import * as assert from 'assert';
 import * as fs from 'fs';
-
-import * as vscode from 'vscode';
-// import * as myExtension from '../../extension';
 import {UltimateResultParser} from '../../ultimate';
 
+
 suite('UltimateResultParser Test Suite', () => {
-	vscode.window.showInformationMessage('Start all tests.');
 
 	test('parsingOfSuccessfulTest', () => {
 		let logResult = fs.readFileSync(`${__dirname}/../fixtures/ultimateLogSucceed.log`).toString();
-		
 		let parser = new UltimateResultParser(logResult);
 
 		assert.strictEqual(parser.provedSuccessfully, true);
@@ -24,7 +20,6 @@ suite('UltimateResultParser Test Suite', () => {
 
 	test('parsingOfSyntaxError', () => {
 		let logResult = fs.readFileSync(`${__dirname}/../fixtures/ultimateLogSyntaxError.log`).toString();
-		
 		let parser = new UltimateResultParser(logResult);
 
 		assert.strictEqual(parser.provedSuccessfully, false);
@@ -38,7 +33,6 @@ suite('UltimateResultParser Test Suite', () => {
 
 	test('parsingOfVerificationError', () => {
 		let logResult = fs.readFileSync(`${__dirname}/../fixtures/ultimateLogVerificationError.log`).toString();
-		
 		let parser = new UltimateResultParser(logResult);
 
 		assert.strictEqual(parser.provedSuccessfully, false);

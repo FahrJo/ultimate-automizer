@@ -34,7 +34,6 @@ export class Ultimate implements VerificationTool{
 
     constructor(context: vscode.ExtensionContext) {
         this.extensionContext = context;
-
         this.initOutputChannel();
         this.initLogChannel();
     }
@@ -45,7 +44,7 @@ export class Ultimate implements VerificationTool{
         } else {
             vscode.window.showInformationMessage('Start Docker container...');
 
-            // TODO
+            // TODO: start Docker container
 
             if (this.containerIsStarted) {
                 vscode.window.showInformationMessage('Ultimate Docker container started!');
@@ -69,34 +68,28 @@ export class Ultimate implements VerificationTool{
     public runOn(document: vscode.TextDocument) {
         if (document && document.languageId === 'c' && !this.ultimateIsRunning) {
             this.ultimateIsRunning = true;
-
-            let cwd = '/Users/johannes/Documents/03_Master/Masterthesis/Docker';
+            let cwd = '/Users/johannes/Documents/03_Master/Masterthesis/Docker';    // TODO!
             let commandString = './ultimate_docker.sh';
             let commandArgs = ['-s', this.settingsFilePath, '-t', this.toolchainFilePath, '-i', document.uri.fsPath];
-
+            let ultimateOutput = '';
+            
             this.outputChannel.clear();
 
             const ultimateProcess = cp.spawn(commandString, commandArgs, { 'cwd': cwd });
             console.log('child process "Ultimate" started');
-            let ultimateOutput = '';
-
+            
             ultimateProcess.stdout.on('data', (stdout) => {
                 this.log(stdout.toString());
                 ultimateOutput += stdout;
             });
-
             ultimateProcess.stderr.on('data', (stderr) => {
                 this.log(stderr.toString());
             });
-
             ultimateProcess.on('close', (code) => {
                 console.log(`child process exited with code ${code}`);
-
                 this.results = new UltimateResultParser(ultimateOutput);
                 this.outputChannel.appendLine(this.results.resultString);
-
                 let diagnostics = this.prepareDiagnosticInfo(document);
-
                 if (diagnostics) {
                     this.collection.set(document.uri, diagnostics);
                 } else {
@@ -112,7 +105,6 @@ export class Ultimate implements VerificationTool{
     public getResultsOfLastRun(): UltimateResultParser {
         return this.results;
     }
-
 
     public dispose() {
         // TODO: stop container
@@ -133,7 +125,6 @@ export class Ultimate implements VerificationTool{
     private log(data: string, severity?: string) {
         let lines = data.split('\n');
         let outputLine = '';
-
         for (const line of lines) {
             if (line.match(/^(?!\s*$).+/)) {
                 let errorLine = line.match(/[0-9]{3} ERROR (.*)/);
@@ -163,18 +154,17 @@ export class Ultimate implements VerificationTool{
         }
     }
 
-
     private prepareDiagnosticInfo(document: vscode.TextDocument): vscode.Diagnostic[] | null {
         let diagnostics = null;
         let relatedInformation: vscode.DiagnosticRelatedInformation[] = [];
-
         if (!this.results.provedSuccessfully) {
             let message = this.results.message;
             let range = document.lineAt(this.results.messageLine).range;
+
             if (this.results.reason && this.results.reasonLine) {
                 let relatedInfoRange = document.lineAt(this.results.reasonLine).range;
-                let relatedInfoMessage = this.results.reason;
                 let relatedInfoLocation = new vscode.Location(document.uri, relatedInfoRange);
+                let relatedInfoMessage = this.results.reason;
                 relatedInformation.push(new vscode.DiagnosticRelatedInformation(relatedInfoLocation, relatedInfoMessage));
             }
             diagnostics = [{
@@ -194,7 +184,6 @@ export class Ultimate implements VerificationTool{
 export class UltimateResultParser {
     public resultString: string;
     public provedSuccessfully: boolean;
-
     public message: string = '';
     public messageLine: number = 0;
     public reason: string | null = null;
@@ -211,8 +200,6 @@ export class UltimateResultParser {
 
         if (this.provedSuccessfully) {
             this.message = 'Program was proved to be correct';
-            //console.log(this.message);
-
         } else if (errorResult) {
             this.messageLine = Number(errorResult[1]) - 1;
             this.message = errorResult[2];
@@ -220,7 +207,6 @@ export class UltimateResultParser {
                 this.reasonLine = Number(errorResult[5]) - 1;
                 this.reason = errorResult[4] + errorResult[5];
             }
-            // console.log(this.message);
         }
     }
 }
