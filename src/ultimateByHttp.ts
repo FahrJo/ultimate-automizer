@@ -35,37 +35,36 @@ export class UltimateByHttp extends UltimateBase {
         }
     }
 
-    public runOn(input: unknown): void {
-        let cCode: string;
+    public runOn(input: string | vscode.TextDocument): void {
+        let cCode = '';
         let document: vscode.TextDocument;
         if (this.isDocument(input) && input.languageId === 'c') {
             document = input;
             cCode = document.getText();
         } else if (typeof input === 'string') {
             cCode = input;
-        } else {
-            return;
         }
 
         if (!this.isLocked()) {
             this.lockUltimate();
+            this.outputChannel.clear();
+            this.showProgressInStatusBar('Fetching Ultimate results...');
             this.fetchResults(cCode.trim())
-                .then((response) => this.parseData(response))
+                .then((response) => this.parseResponse(response))
                 .then(() => this.printResultsToOutput())
                 .then(() => this.printResultsToLog())
                 .then(() => this.embedDiagnosticInfoInto(document))
+                .then(() => this.stopShowingProgressInStatusBar())
                 .then(() => this.freeUltimate())
                 .catch((error: any) => {
                     console.log(error);
+                    this.stopShowingProgressInStatusBar();
                     this.freeUltimate();
                 });
         }
     }
 
     public fetchResults(cCode: string) {
-        this.outputChannel.clear();
-        this.showProgressInStatusBar('Fetching Ultimate results...');
-
         let values = 'action=execute';
         values += '&code=' + encodeURIComponent(cCode);
         values +=
@@ -90,33 +89,8 @@ export class UltimateByHttp extends UltimateBase {
         return httpsRequest(options);
     }
 
-    private parseData(httpResponse: HttpResponse) {
+    private parseResponse(httpResponse: HttpResponse) {
         this.results = JSON.parse(httpResponse.body);
-    }
-
-    private showProgressInStatusBar(title: string) {
-        vscode.window.withProgress(
-            {
-                title: title,
-                location: vscode.ProgressLocation.Window,
-                cancellable: true,
-            },
-            (progress, token) => {
-                return new Promise((resolve) => {
-                    this.progressCancellationToken = new vscode.CancellationTokenSource();
-                    this.progressCancellationToken.token.onCancellationRequested(() => {
-                        this.progressCancellationToken?.dispose();
-                        this.progressCancellationToken = null;
-                        resolve(null);
-                        return;
-                    });
-
-                    setTimeout(() => {
-                        resolve(null);
-                    }, 300000);
-                });
-            }
-        );
     }
 
     public getResultsOfLastRun(): UltimateResults {

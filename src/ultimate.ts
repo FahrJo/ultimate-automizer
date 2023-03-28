@@ -40,7 +40,7 @@ export abstract class UltimateBase implements Ultimate {
 
     protected containerIsStarted = false;
     private ultimateIsRunning = false;
-    protected progressCancellationToken: vscode.CancellationTokenSource | null = null;
+    private progressCancellationToken: vscode.CancellationTokenSource | null = null;
 
     constructor(context: vscode.ExtensionContext) {
         this.extensionContext = context;
@@ -117,13 +117,41 @@ export abstract class UltimateBase implements Ultimate {
         }
     }
 
+    protected showProgressInStatusBar(title: string) {
+        vscode.window.withProgress(
+            {
+                title: title,
+                location: vscode.ProgressLocation.Window,
+                cancellable: true,
+            },
+            (progress, token) => {
+                return new Promise((resolve) => {
+                    this.progressCancellationToken = new vscode.CancellationTokenSource();
+                    this.progressCancellationToken.token.onCancellationRequested(() => {
+                        this.progressCancellationToken?.dispose();
+                        this.progressCancellationToken = null;
+                        resolve(null);
+                        return;
+                    });
+
+                    setTimeout(() => {
+                        resolve(null);
+                    }, 300000);
+                });
+            }
+        );
+    }
+
+    protected stopShowingProgressInStatusBar() {
+        this.progressCancellationToken?.cancel();
+    }
+
     protected lockUltimate() {
         this.ultimateIsRunning = true;
     }
 
     protected freeUltimate() {
         this.ultimateIsRunning = false;
-        this.progressCancellationToken?.cancel();
     }
 
     protected isLocked() {
