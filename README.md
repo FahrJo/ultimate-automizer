@@ -6,17 +6,15 @@ This extension runs a formal verification on the current active C file. It relie
 
 After activation of this extension, on each saving of a C file, a formal verification by Ultimate Automizer on the file is performed.
 
-For example if there is an image subfolder under your extension project workspace:
-
-\!\[feature X\]\(images/feature-x.png\)
-
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+![demonstration](images/demo.gif)
 
 ## Requirements
 
-Docker has to be installed.
+Connection to a public server running Ultimate Automizer, e.g. https://monteverdi.informatik.uni-freiburg.de/ 
 
-## Extension Settings
+Alternatively a container providing the API can be executed inside Docker.
+
+<!-- ## Extension Settings
 
 Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
 
@@ -48,16 +46,4 @@ Fixed issue #.
 Added features X, Y, and Z.
 
 ---
-
-## Following extension guidelines
-
-Ensure that you've read through the extensions guidelines and follow the best practices for creating your extension.
-
-* [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
-
-## For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
+-->
