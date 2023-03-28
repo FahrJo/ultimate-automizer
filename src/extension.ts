@@ -8,7 +8,7 @@ let ultimate: Ultimate;
 // Your extension is activated the very first time the command is executed
 export async function activate(context: vscode.ExtensionContext): Promise<vscode.ExtensionContext> {
     //ultimate = UltimateFactory.createUltimateUsingLog(context);
-	ultimate = UltimateFactory.createUltimateUsingPublicApi(context);
+    ultimate = UltimateFactory.createUltimateUsingPublicApi(context);
 
     if (vscode.window.activeTextEditor) {
         ultimate.runOn(vscode.window.activeTextEditor.document);
