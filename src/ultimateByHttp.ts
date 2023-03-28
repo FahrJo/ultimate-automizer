@@ -1,9 +1,9 @@
-import * as https from 'https';
 import * as vscode from 'vscode';
+import * as url from 'url';
 import { SingleUltimateResult, UltimateBase, UltimateResults } from './ultimate';
+import { HttpResponse, httpsRequest } from './httpsRequest';
 
 export class UltimateByHttp extends UltimateBase {
-    private progressCancellationToken: vscode.CancellationTokenSource | null = null;
     private baseUrl = '';
     private useDockerContainer = false;
 
@@ -35,90 +35,88 @@ export class UltimateByHttp extends UltimateBase {
         }
     }
 
-    /**
-     * Execute Ultimate Automizer on the current active file
-     */
-    public runOn(document: vscode.TextDocument) {
-        if (document && document.languageId === 'c') {
-            // Run on code from editor
-            this.verify(document.getText());
-            //this.embedDiagnosticInfoInto(document);
+    public runOn(input: unknown): void {
+        let cCode: string;
+        let document: vscode.TextDocument;
+        if (this.isDocument(input) && input.languageId === 'c') {
+            document = input;
+            cCode = document.getText();
+        } else if (typeof input === 'string') {
+            cCode = input;
+        } else {
+            return;
+        }
+
+        if (!this.isLocked()) {
+            this.lockUltimate();
+            this.fetchResults(cCode.trim())
+                .then((response) => this.parseData(response))
+                .then(() => this.printResultsToOutput())
+                .then(() => this.printResultsToLog())
+                .then(() => this.embedDiagnosticInfoInto(document))
+                .then(() => this.freeUltimate())
+                .catch((error: any) => {
+                    console.log(error);
+                    this.freeUltimate();
+                });
         }
     }
 
-    public verify(cCode: string) {
-        this.ultimateIsRunning = true;
+    public fetchResults(cCode: string) {
         this.outputChannel.clear();
-        let trimmedCode = cCode.trim();
-        if (trimmedCode && !this.ultimateIsRunning) {
-            vscode.window.withProgress(
-                {
-                    title: 'Fetching Ultimate results...',
-                    location: vscode.ProgressLocation.Window,
-                    cancellable: true,
-                },
-                (progress, token) => {
-                    return new Promise((resolve) => {
-                        this.progressCancellationToken = new vscode.CancellationTokenSource();
-                        this.progressCancellationToken.token.onCancellationRequested(() => {
-                            this.progressCancellationToken?.dispose();
-                            this.progressCancellationToken = null;
-                            resolve(null);
-                            return;
-                        });
+        this.showProgressInStatusBar('Fetching Ultimate results...');
 
-                        setTimeout(() => {
-                            resolve(null);
-                        }, 300000);
+        let values = 'action=execute';
+        values += '&code=' + encodeURIComponent(cCode);
+        values +=
+            '&cAutomizer_deunifreiburginformatikultimatepluginsgeneratorcacsl2boogietranslatorcheckforthemainprocedureifallallocatedmemorywasfreed=false';
+        values +=
+            '&cAutomizer_deunifreiburginformatikultimatepluginsgeneratorcacsl2boogietranslatorcheckabsenceofsignedintegeroverflows=false';
+        values += '&taskID=AUTOMIZER_C&tcID=cAutomizer';
+
+        let options = {
+            hostname: this.baseUrl,
+            port: 443,
+            path: '/tomcat/WebsiteEclipseBridge/if?' + values,
+            method: 'POST',
+            headers: {
+                /* eslint-disable @typescript-eslint/naming-convention */
+                'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
+                'Connection': 'keep-alive',
+                /* eslint-enable @typescript-eslint/naming-convention */
+            },
+        };
+
+        return httpsRequest(options);
+    }
+
+    private parseData(httpResponse: HttpResponse) {
+        this.results = JSON.parse(httpResponse.body);
+    }
+
+    private showProgressInStatusBar(title: string) {
+        vscode.window.withProgress(
+            {
+                title: title,
+                location: vscode.ProgressLocation.Window,
+                cancellable: true,
+            },
+            (progress, token) => {
+                return new Promise((resolve) => {
+                    this.progressCancellationToken = new vscode.CancellationTokenSource();
+                    this.progressCancellationToken.token.onCancellationRequested(() => {
+                        this.progressCancellationToken?.dispose();
+                        this.progressCancellationToken = null;
+                        resolve(null);
+                        return;
                     });
-                }
-            );
 
-            let values = 'action=execute';
-            values += '&code=' + encodeURIComponent(trimmedCode);
-            values +=
-                '&cAutomizer_deunifreiburginformatikultimatepluginsgeneratorcacsl2boogietranslatorcheckforthemainprocedureifallallocatedmemorywasfreed=false';
-            values +=
-                '&cAutomizer_deunifreiburginformatikultimatepluginsgeneratorcacsl2boogietranslatorcheckabsenceofsignedintegeroverflows=false';
-            values += '&taskID=AUTOMIZER_C&tcID=cAutomizer';
-
-            let options = {
-                hostname: this.baseUrl,
-                port: 443,
-                path: '/tomcat/WebsiteEclipseBridge/if?' + values,
-                method: 'POST',
-                headers: {
-                    /* eslint-disable @typescript-eslint/naming-convention */
-                    'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
-                    'Connection': 'keep-alive',
-                    /* eslint-enable @typescript-eslint/naming-convention */
-                },
-            };
-
-            let req = https.request(options, (res) => {
-                console.log('statusCode:', res.statusCode);
-                console.log('headers:', res.headers);
-
-                res.on('data', (data) => {
-                    this.ultimateIsRunning = false;
-                    this.results = JSON.parse(data);
-                    this.printResultsToOutput();
-                    this.printResultsToLog();
-                    this.progressCancellationToken?.cancel();
+                    setTimeout(() => {
+                        resolve(null);
+                    }, 300000);
                 });
-            });
-
-            req.on('error', (error) => {
-                this.ultimateIsRunning = false;
-                console.error(error);
-                this.progressCancellationToken?.cancel();
-            });
-
-            req.write('');
-            req.end();
-        } else {
-            console.log('Ultimate already running ...');
-        }
+            }
+        );
     }
 
     public getResultsOfLastRun(): UltimateResults {

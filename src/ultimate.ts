@@ -6,6 +6,12 @@ export interface Ultimate {
     setup(): any;
 
     /**
+     * Execute Ultimate Automizer on the current active file
+     * @param code C code to verify
+     */
+    runOn(code: string): void;
+
+    /**
      * Executes the verification tool on the given document
      * @param document Document to verify.
      */
@@ -33,7 +39,8 @@ export abstract class UltimateBase implements Ultimate {
     protected results: UltimateResults = undefined!;
 
     protected containerIsStarted = false;
-    protected ultimateIsRunning = false;
+    private ultimateIsRunning = false;
+    protected progressCancellationToken: vscode.CancellationTokenSource | null = null;
 
     constructor(context: vscode.ExtensionContext) {
         this.extensionContext = context;
@@ -61,6 +68,9 @@ export abstract class UltimateBase implements Ultimate {
 
     public abstract setup(): any;
 
+    // Execute Ultimate Automizer on C code
+    public abstract runOn(code: string): void;
+
     // Execute Ultimate Automizer on the current active file
     public abstract runOn(document: vscode.TextDocument): void;
 
@@ -86,9 +96,10 @@ export abstract class UltimateBase implements Ultimate {
         }
     }
 
-    protected embedDiagnosticInfoInto(document: vscode.TextDocument) {
+    protected embedDiagnosticInfoInto(document: vscode.TextDocument): null {
         let diagnostics = this.prepareDiagnosticInfo(document);
         this.collection.set(document.uri, diagnostics);
+        return null;
     }
 
     protected abstract prepareDiagnosticInfo(document: vscode.TextDocument): vscode.Diagnostic[];
@@ -104,6 +115,23 @@ export abstract class UltimateBase implements Ultimate {
             default:
                 return vscode.DiagnosticSeverity.Information;
         }
+    }
+
+    protected lockUltimate() {
+        this.ultimateIsRunning = true;
+    }
+
+    protected freeUltimate() {
+        this.ultimateIsRunning = false;
+        this.progressCancellationToken?.cancel();
+    }
+
+    protected isLocked() {
+        return this.ultimateIsRunning;
+    }
+
+    public isDocument(obj: any | vscode.TextDocument): obj is vscode.TextDocument {
+        return true;
     }
 }
 

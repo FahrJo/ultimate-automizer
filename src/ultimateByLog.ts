@@ -25,10 +25,17 @@ export class UltimateByLog extends UltimateBase {
         this.settingsFilePath = path;
     }
 
-    // Execute Ultimate Automizer on the current active file
-    public runOn(document: vscode.TextDocument) {
-        if (document && document.languageId === 'c' && !this.ultimateIsRunning) {
-            this.ultimateIsRunning = true;
+    // TODO: Run on String!
+    public runOn(input: unknown): void {
+        let document: vscode.TextDocument;
+        if (this.isDocument(input) && input.languageId === 'c') {
+            document = input;
+        } else {
+            return;
+        }
+
+        if (!this.isLocked()) {
+            this.lockUltimate();
             let cwd = '/Users/johannes/Documents/03_Master/Masterthesis/Docker'; // TODO!
             let commandString = './ultimate_docker.sh';
             // prettier-ignore
@@ -57,7 +64,7 @@ export class UltimateByLog extends UltimateBase {
 
             ultimateProcess.on('close', (code) => {
                 console.log(`child process exited with code ${code}`);
-                this.ultimateIsRunning = false;
+                this.freeUltimate();
                 this.results = new UltimateResultParser(ultimateOutput);
                 this.outputChannel.appendLine(this.results.resultString);
                 this.embedDiagnosticInfoInto(document);
