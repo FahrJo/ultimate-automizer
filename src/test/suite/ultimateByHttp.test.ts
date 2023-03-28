@@ -25,8 +25,9 @@ suite('UltimateByHttp Test Suite', () => {
 
         let results = JSON.stringify(ultimate.getResultsOfLastRun().results[0]);
 
-        const expectedResult = '{"startLNr":-1,"startCol":-1,"endLNr":-1,"endCol":-1,"logLvl":"info","shortDesc":"All specifications hold","type":"invariant","longDesc":"We were not able to verify any specifiation because the program does not contain any specification."}';
-        
+        const expectedResult =
+            '{"startLNr":-1,"startCol":-1,"endLNr":-1,"endCol":-1,"logLvl":"info","shortDesc":"All specifications hold","type":"invariant","longDesc":"We were not able to verify any specifiation because the program does not contain any specification."}';
+
         assert.strictEqual(results, expectedResult);
         //assert.strictEqual(results.message, 'Program was proved to be correct');
         //assert.strictEqual(results.messageLine, 0);
