@@ -97,8 +97,10 @@ export abstract class UltimateBase implements Ultimate {
     }
 
     protected embedDiagnosticInfoInto(document: vscode.TextDocument): null {
-        let diagnostics = this.prepareDiagnosticInfo(document);
-        this.collection.set(document.uri, diagnostics);
+        if (document) {
+            let diagnostics = this.prepareDiagnosticInfo(document);
+            this.collection.set(document.uri, diagnostics);
+        }
         return null;
     }
 

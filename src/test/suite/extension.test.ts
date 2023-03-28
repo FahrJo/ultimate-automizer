@@ -10,7 +10,7 @@ suite('Ultimate Extension Test Suite', () => {
         extensionContext = await extension?.activate();
     });
 
-    test('outputChannelsSubscribedTest', () => {
+    test('outputChannelsSubscribedTest', async () => {
         let logSubscriberOk = false;
         let outSubscriberOk = false;
 
