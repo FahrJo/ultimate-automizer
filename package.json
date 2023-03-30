@@ -31,7 +31,45 @@
                 "command": "ultimate-automizer.startDockerContainer",
                 "title": "Start Ulimate Docker container"
             }
-        ]
+        ],
+        "configuration": {
+            "title": "Ultimate Automizer",
+            "properties": {
+                "ultimate.mode": {
+                    "type": "string",
+                    "default": "REST API",
+                    "enum": [
+                        "REST API",
+                        "stdout"
+                    ],
+                    "enumDescriptions": [
+                        "Use the API of the below specified URL for verification",
+                        "Start Ultimate locally and parse the log output."
+                    ],
+                    "description": "Specifies if Ultimate will be accessed by accessing a REST API or the output of the command line."
+                },
+                "ultimate.url": {
+                    "type": "string",
+                    "default": "https://monteverdi.informatik.uni-freiburg.de",
+                    "description": "Base URL of the API endpoint."
+                },
+                "ultimate.executablePath": {
+                    "type": "string",
+                    "default": "",
+                    "description": "Path to the executable of Ultimate is not accessed by the REST API."
+                },
+                "ultimate.settingsPath": {
+                    "type": "string",
+                    "default": "",
+                    "description": "Path to the settings of Ultimate is not accessed by the REST API."
+                },
+                "ultimate.toolchainPath": {
+                    "type": "string",
+                    "default": "",
+                    "description": "Path to the toolchain of Ultimate is not accessed by the REST API."
+                }
+            }
+        }
     },
     "scripts": {
         "vscode:prepublish": "npm run compile",

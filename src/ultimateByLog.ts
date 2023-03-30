@@ -1,28 +1,43 @@
 import * as cp from 'child_process';
+import * as fs from 'fs';
+import * as path from 'path';
 import * as vscode from 'vscode';
 import { SingleUltimateResult, UltimateBase, UltimateResults } from './ultimate';
 
 export class UltimateByLog extends UltimateBase {
-    private settingsFilePath =
-        'results/ultimate_configuration/settings/ultimate-automizer_settings.epl';
-    private toolchainFilePath =
-        'results/ultimate_configuration/toolchains/ultimate-automizer_toolchain.xml';
+    private executable: path.ParsedPath;
+    private settingsFilePath = vscode.Uri.file('');
+    private toolchainFilePath = vscode.Uri.file('');
     protected results = new UltimateResultParser('');
 
-    constructor(context: vscode.ExtensionContext) {
+    constructor(
+        context: vscode.ExtensionContext,
+        executable: vscode.Uri,
+        settings: vscode.Uri,
+        toolchain: vscode.Uri
+    ) {
         super(context);
+        this.executable = path.parse(executable.fsPath);
+        this.setSettings(settings);
+        this.setToolchain(toolchain);
     }
 
     public setup() {}
 
-    public setToolchain(path: string) {
-        // TODO: check for valid file
-        this.toolchainFilePath = path;
+    public setToolchain(path: vscode.Uri) {
+        if (fs.existsSync(path.fsPath) && path.fsPath.match(/(.*\.xml$)/)) {
+            this.toolchainFilePath = path;
+        } else {
+            console.log(`Toolchain file ${path} does not exist`);
+        }
     }
 
-    public setSettings(path: string) {
-        // TODO: check for valid file
-        this.settingsFilePath = path;
+    public setSettings(path: vscode.Uri) {
+        if (fs.existsSync(path.fsPath) && path.fsPath.match(/(.*\.epl$)/)) {
+            this.settingsFilePath = path;
+        } else {
+            console.log(`Toolchain file ${path} does not exist`);
+        }
     }
 
     // TODO: Run on String!
@@ -36,12 +51,12 @@ export class UltimateByLog extends UltimateBase {
 
         if (!this.isLocked()) {
             this.lockUltimate();
-            let cwd = '/Users/johannes/Documents/03_Master/Masterthesis/Docker'; // TODO!
-            let commandString = './ultimate_docker.sh';
+            let cwd = this.executable.dir;
+            let commandString = './' + this.executable.base;
             // prettier-ignore
             let commandArgs = [
-                '-s', this.settingsFilePath,
-                '-t', this.toolchainFilePath,
+                '-s', this.settingsFilePath.fsPath,
+                '-t', this.toolchainFilePath.fsPath,
                 '-i', document.uri.fsPath,
             ];
             let ultimateOutput = '';
@@ -76,10 +91,6 @@ export class UltimateByLog extends UltimateBase {
 
     public getResultsOfLastRun(): UltimateResults {
         return this.results;
-    }
-
-    public dispose() {
-        // TODO: stop container
     }
 
     private printStdoutToLog(stdout: string) {
@@ -121,8 +132,15 @@ export class UltimateByLog extends UltimateBase {
             let range = document.lineAt(this.results.messageLine).range;
 
             if (this.results.reason && this.results.reasonLine) {
-                let relatedInfoRange = document.lineAt(this.results.reasonLine).range;
-                let relatedInfoLocation = new vscode.Location(document.uri, relatedInfoRange);
+                let relatedInfoLocation = new vscode.Location(
+                    document.uri,
+                    new vscode.Position(0, 0)
+                );
+                if (this.results.reasonLine >= 0) {
+                    let relatedInfoRange = document.lineAt(this.results.reasonLine).range;
+                    relatedInfoLocation = new vscode.Location(document.uri, relatedInfoRange);
+                }
+
                 let relatedInfoMessage = this.results.reason;
                 relatedInformation.push(
                     new vscode.DiagnosticRelatedInformation(relatedInfoLocation, relatedInfoMessage)
@@ -144,7 +162,10 @@ export class UltimateByLog extends UltimateBase {
 }
 
 // Regular Expressions:
-const REGEX_UNPROVABLE = /UnprovableResult \[Line: (\d*)\]: (.*)\n (.*)\n Reason: (\D*)(\d*)(.*)\n/;
+const REGEX_UNPROVABLE =
+    /UnprovableResult \[Line: (\d*)\]: (.*)\n (.*)\n Reason: (\D*)(\d*)((.|\n)*)\n\n/;
+const REGEX_COUNTEREXAMPLE =
+    /CounterExampleResult \[Line: (\d*)\]: (.*)\n (.*)\n(\D*):(.*)((.|\n)*)\n\n/;
 const REGEX_UNSUPPORTED_SYNTAX = /UnsupportedSyntaxResult \[Line: (.*)\]: (.*)\n/;
 
 export class UltimateResultParser implements UltimateResults {
@@ -168,9 +189,10 @@ export class UltimateResultParser implements UltimateResults {
 
         // Check if program was proved to be correct
         this.provedSuccessfully = this.resultString.includes('AllSpecificationsHoldResult');
+        let counterexampleResult = this.resultString.match(REGEX_COUNTEREXAMPLE);
         let unprovableResult = this.resultString.match(REGEX_UNPROVABLE);
         let unsupportedSyntaxResult = this.resultString.match(REGEX_UNSUPPORTED_SYNTAX);
-        let errorResult = unsupportedSyntaxResult || unprovableResult;
+        let errorResult = unsupportedSyntaxResult || counterexampleResult || unprovableResult;
 
         if (this.provedSuccessfully) {
             this.message = 'Program was proved to be correct';
@@ -179,7 +201,7 @@ export class UltimateResultParser implements UltimateResults {
             this.message = errorResult[2];
             if (errorResult.length > 5) {
                 this.reasonLine = Number(errorResult[5]) - 1;
-                this.reason = errorResult[4] + errorResult[5];
+                this.reason = `${errorResult[4]}${errorResult[5]}: ${errorResult[6]}`;
             }
         }
 

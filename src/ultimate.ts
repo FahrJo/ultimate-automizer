@@ -78,7 +78,9 @@ export abstract class UltimateBase implements Ultimate {
         return this.results;
     }
 
-    public abstract dispose(): any;
+    public dispose() {
+        this.outputChannel.dispose();
+    }
 
     protected log(message: string, severity?: vscode.DiagnosticSeverity) {
         switch (severity) {

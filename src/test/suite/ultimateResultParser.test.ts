@@ -42,7 +42,7 @@ suite('UltimateResultParser Test Suite', () => {
         assert.strictEqual(parser.provedSuccessfully, false);
         assert.strictEqual(parser.message, 'Unable to prove that assertion always holds');
         assert.strictEqual(parser.messageLine, 62);
-        assert.strictEqual(parser.reason, 'overapproximation of large string literal at line 110');
+        assert.match(parser.reason!, /^(overapproximation of large string literal at line 110)/);
         assert.strictEqual(parser.reasonLine, 109);
         assert.match(parser.resultString, /^---\sResults\s---.*/);
         assert.match(parser.resultString, /.*Received\sshutdown\srequest\.\.\.\n$/);
