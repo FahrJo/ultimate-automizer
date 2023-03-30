@@ -1,17 +1,14 @@
 import * as vscode from 'vscode';
-import * as url from 'url';
 import { SingleUltimateResult, UltimateBase, UltimateResults } from './ultimate';
 import { HttpResponse, httpsRequest } from './httpsRequest';
 
 export class UltimateByHttp extends UltimateBase {
-    private baseUrl = '';
+    private baseUrl: URL;
     private useDockerContainer = false;
 
     constructor(context: vscode.ExtensionContext, useDocker: boolean = false, baseUrl?: string) {
         super(context);
-        if (baseUrl) {
-            this.baseUrl = baseUrl;
-        }
+        this.baseUrl = new URL(baseUrl || '');
         this.useDockerContainer = useDocker;
     }
 
@@ -74,7 +71,7 @@ export class UltimateByHttp extends UltimateBase {
         values += '&taskID=AUTOMIZER_C&tcID=cAutomizer';
 
         let options = {
-            hostname: this.baseUrl,
+            hostname: this.baseUrl.hostname,
             port: 443,
             path: '/tomcat/WebsiteEclipseBridge/if?' + values,
             method: 'POST',
@@ -95,10 +92,6 @@ export class UltimateByHttp extends UltimateBase {
 
     public getResultsOfLastRun(): UltimateResults {
         return this.results;
-    }
-
-    public dispose() {
-        // TODO: stop container
     }
 
     protected printResultsToOutput() {
