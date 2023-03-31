@@ -10,22 +10,21 @@ After activation of this extension, on each saving of a C file, a formal verific
 
 ## Requirements
 
-Connection to a public server running Ultimate Automizer, e.g. https://monteverdi.informatik.uni-freiburg.de/ 
+Connection to a public server running Ultimate Automizer, e.g. <https://monteverdi.informatik.uni-freiburg.de/>.
 
 Alternatively a container providing the API can be executed inside Docker.
 
-<!-- ## Extension Settings
-
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
-
-For example:
+## Extension Settings
 
 This extension contributes the following settings:
 
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
+* `ultimate.mode`: `"REST API"`/`"stdout"` to specify if Ultimate will be accessed by accessing a REST API or the output of the command line.
+* `ultimate.url`: Base URL of the REST API endpoint.
+* `ultimate.executablePath`: Path to the executable of Ultimate is NOT accessed by the REST API. This can either be Ultimate itself or the [wrapper script for MacOS](https://github.com/FahrJo/ultimate-automizer-docker).
+* `ultimate.settingsPath`: Path to the settings (*.epl) of Ultimate is not accessed by the REST API.
+* `ultimate.toolchainPath`: Path to the toolchain (*.xml) of Ultimate is NOT accessed by the REST API.
 
-## Known Issues
+<!--## Known Issues
 
 Calling out known issues can help limit users opening duplicate issues against your extension.
 
