@@ -10,7 +10,7 @@ After activation of this extension, on each saving of a C file, a formal verific
 
 ## Requirements
 
-Connection to a public server running Ultimate Automizer, e.g. https://monteverdi.informatik.uni-freiburg.de/ 
+Connection to a public server running Ultimate Automizer, e.g. <https://monteverdi.informatik.uni-freiburg.de/>.
 
 Alternatively a container providing the API can be executed inside Docker.
 
