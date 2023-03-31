@@ -56,7 +56,7 @@ export class UltimateByLog extends UltimateBase {
             // prettier-ignore
             let commandArgs = [
                 '-s', this.settingsFilePath.fsPath,
-                '-t', this.toolchainFilePath.fsPath,
+                '-tc', this.toolchainFilePath.fsPath,
                 '-i', document.uri.fsPath,
             ];
             let ultimateOutput = '';
