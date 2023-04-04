@@ -24,19 +24,22 @@ This extension contributes the following settings:
 * `ultimate.settingsPath`: Path to the settings (*.epl) of Ultimate is not accessed by the REST API.
 * `ultimate.toolchainPath`: Path to the toolchain (*.xml) of Ultimate is NOT accessed by the REST API.
 
-<!--## Known Issues
+## Known Issues
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
+* Make sure the right Java version us used as default version if running Ultimate locally.
+* Windows version only working properly by using the REST API mode since Ultimate 2.3.0 was not working on my Windows test machine properly.
+* The result representation (Code highlighting, log output etc.) so far looks differently for REST API and stdout mode. This is due to the output of Ultimate in the two different modes.
+* So far there is no Dockerfile/Image available to host the REST API backend locally in a container.
 
 ## Release Notes
 
 Users appreciate release notes as you update your extension.
 
-### 1.0.0
+### 0.1.0
 
-Initial release of ...
+Initial release
 
-### 1.0.1
+<!--### 1.0.1
 
 Fixed issue #.
 
