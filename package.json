@@ -10,6 +10,7 @@
             "email": "johannes.fahr@posteo.de"
         }
     ],
+    "icon": "./images/ultimate_logo.png",
     "repository": {
         "type": "git",
         "url": "https://github.com/FahrJo/ultimate-automizer.git"

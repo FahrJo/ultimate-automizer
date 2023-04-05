@@ -49,3 +49,7 @@ Added features X, Y, and Z.
 
 ---
 -->
+
+### Acknowledgements
+
+The icon is used from the original Ultimate project [here](https://github.com/ultimate-pa/ultimate).
