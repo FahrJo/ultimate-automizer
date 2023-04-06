@@ -51,17 +51,17 @@
                 "ultimate.executablePath": {
                     "type": "string",
                     "default": "",
-                    "description": "Path to the executable of Ultimate is not accessed by the REST API."
+                    "description": "Path to the executable of Ultimate (is not accessed when using the REST API)."
                 },
                 "ultimate.settingsPath": {
                     "type": "string",
                     "default": "",
-                    "description": "Path to the settings (*.epl/*.epf) of Ultimate is not accessed by the REST API."
+                    "description": "Path to the settings (*.epl/*.epf) of Ultimate (is not accessed when using the REST API)."
                 },
                 "ultimate.toolchainPath": {
                     "type": "string",
                     "default": "",
-                    "description": "Path to the toolchain (*.xml) of Ultimate is not accessed by the REST API."
+                    "description": "Path to the toolchain (*.xml) of Ultimate (is not accessed when using the REST API)."
                 }
             }
         }
