@@ -56,7 +56,7 @@
                 "ultimate.settingsPath": {
                     "type": "string",
                     "default": "",
-                    "description": "Path to the settings (*.epl) of Ultimate is not accessed by the REST API."
+                    "description": "Path to the settings (*.epl/*.epf) of Ultimate is not accessed by the REST API."
                 },
                 "ultimate.toolchainPath": {
                     "type": "string",
