@@ -2,7 +2,7 @@
     "name": "ultimate-automizer",
     "displayName": "Ultimate Automizer",
     "description": "This extension runs a formal verification on the current active C file.",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "publisher": "FahrJo",
     "contributors": [
         {
@@ -10,6 +10,7 @@
             "email": "johannes.fahr@posteo.de"
         }
     ],
+    "icon": "./images/ultimate_logo.png",
     "repository": {
         "type": "git",
         "url": "https://github.com/FahrJo/ultimate-automizer.git"
@@ -26,12 +27,6 @@
     ],
     "main": "./out/extension.js",
     "contributes": {
-        "commands": [
-            {
-                "command": "ultimate-automizer.startDockerContainer",
-                "title": "Start Ulimate Docker container"
-            }
-        ],
         "configuration": {
             "title": "Ultimate Automizer",
             "properties": {
@@ -61,7 +56,7 @@
                 "ultimate.settingsPath": {
                     "type": "string",
                     "default": "",
-                    "description": "Path to the settings (*.epl) of Ultimate is not accessed by the REST API."
+                    "description": "Path to the settings (*.epl/*.epf) of Ultimate is not accessed by the REST API."
                 },
                 "ultimate.toolchainPath": {
                     "type": "string",

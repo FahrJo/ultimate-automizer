@@ -28,12 +28,16 @@ This extension contributes the following settings:
 
 * Make sure the right Java version us used as default version if running Ultimate locally.
 * Windows version only working properly by using the REST API mode since Ultimate 2.3.0 was not working on my Windows test machine properly.
-* The result representation (Code highlighting, log output etc.) so far looks differently for REST API and stdout mode. This is due to the output of Ultimate in the two different modes.
+* The result representation (Code highlighting, log output etc.) so far looks differently for `REST API` and `stdout` mode. This is due to the output of Ultimate in the two different modes.
 * So far there is no Dockerfile/Image available to host the REST API backend locally in a container.
 
 ## Release Notes
 
 Users appreciate release notes as you update your extension.
+
+### 0.1.1
+
+Add icon and compatibility for *.epf files.
 
 ### 0.1.0
 
@@ -49,3 +53,7 @@ Added features X, Y, and Z.
 
 ---
 -->
+
+### Acknowledgements
+
+The icon is used from the original Ultimate project [here](https://github.com/ultimate-pa/ultimate).

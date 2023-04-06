@@ -27,16 +27,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<vscode
             }
         })
     );
-
-    // Now provide the implementation of the command with registerCommand
-    // The commandId parameter must match the command field in package.json
-    let disposable = vscode.commands.registerCommand(
-        'ultimate-automizer.startDockerContainer',
-        ultimate.setup
-    );
-
-    context.subscriptions.push(disposable);
-
     return context;
 }
 
