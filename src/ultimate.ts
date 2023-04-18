@@ -56,13 +56,13 @@ export abstract class UltimateBase implements Ultimate {
 
     private initLogChannel() {
         this.extensionContext.subscriptions.push(this.logChannel);
-        this.logChannel.appendLine('Hello Ultimate!');
+        this.logChannel.appendLine('Ultimate activated');
         this.logChannel.show();
     }
 
     private initOutputChannel() {
         this.extensionContext.subscriptions.push(this.outputChannel);
-        this.outputChannel.appendLine('Hello Ultimate!');
+        this.outputChannel.appendLine('Ultimate activated');
         this.outputChannel.show();
     }
 
