@@ -20,7 +20,7 @@ export interface Ultimate {
     /**
      * Returns the results of the last execution of verification
      */
-    getResultsOfLastRun(): UltimateResults;
+    getResultsOfLastRun(): SingleUltimateResult[];
 
     /**
      * Stop and terminate the verification tool
@@ -34,7 +34,9 @@ export abstract class UltimateBase implements Ultimate {
     protected outputChannel: vscode.OutputChannel;
     protected collection: vscode.DiagnosticCollection;
 
-    protected results: UltimateResults = undefined!;
+    //protected response: UltimateResponse = undefined!;
+    protected results: SingleUltimateResult[] = [];
+    protected error: string | undefined;
 
     protected containerIsStarted = false;
     private ultimateIsRunning = false;
@@ -72,7 +74,7 @@ export abstract class UltimateBase implements Ultimate {
     // Execute Ultimate Automizer on the current active file
     public abstract runOn(document: vscode.TextDocument): void;
 
-    public getResultsOfLastRun(): UltimateResults {
+    public getResultsOfLastRun(): SingleUltimateResult[] {
         return this.results;
     }
 
@@ -178,9 +180,4 @@ export interface SingleUltimateResult {
     shortDesc: string;
     type: string;
     longDesc: string;
-}
-
-export interface UltimateResults {
-    results: SingleUltimateResult[];
-    status: string;
 }

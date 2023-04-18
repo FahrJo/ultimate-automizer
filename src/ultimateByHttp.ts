@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { SingleUltimateResult, UltimateBase, UltimateResults } from './ultimate';
+import { SingleUltimateResult, UltimateBase } from './ultimate';
 import { HttpResponse, httpsRequest } from './httpsRequest';
 
 export class UltimateByHttp extends UltimateBase {
@@ -87,15 +87,16 @@ export class UltimateByHttp extends UltimateBase {
     }
 
     private parseResponse(httpResponse: HttpResponse): void {
-        this.results = JSON.parse(httpResponse.body);
-    }
-
-    public getResultsOfLastRun(): UltimateResults {
-        return this.results;
+        let response = JSON.parse(httpResponse.body);
+        this.results = response.results ? response.results : [];
+        this.error = response.error;
     }
 
     protected printResultsToOutput(): void {
-        this.results.results.forEach((result) => {
+        if (this.error) {
+            this.outputChannel.appendLine(this.error);
+        }
+        this.results.forEach((result) => {
             this.outputChannel.appendLine(`${result.logLvl}: ${result.shortDesc}`);
             this.outputChannel.appendLine(`${result.longDesc}`);
             this.outputChannel.appendLine('');
@@ -103,7 +104,10 @@ export class UltimateByHttp extends UltimateBase {
     }
 
     protected printResultsToLog(): void {
-        this.results.results.forEach((result) => {
+        if (this.error) {
+            this.log(this.error, vscode.DiagnosticSeverity.Error);
+        }
+        this.results.forEach((result) => {
             let message = `${result.shortDesc}: ${result.longDesc}`;
             let severity = this.convertSeverity(result.logLvl);
             this.log(message, severity);
@@ -113,7 +117,7 @@ export class UltimateByHttp extends UltimateBase {
     protected prepareDiagnosticInfo(document: vscode.TextDocument): vscode.Diagnostic[] {
         let diagnostics: vscode.Diagnostic[] = [];
 
-        this.results.results.forEach((result) => {
+        this.results.forEach((result) => {
             if (this.resultIsWorthEmbedding(result)) {
                 let relatedInformation: vscode.DiagnosticRelatedInformation[] = [];
                 let reasonInformation = result.longDesc.match(/Reason: (\D*)(\d*)(.*)\n/);
