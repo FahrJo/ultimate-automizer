@@ -34,8 +34,6 @@ export abstract class UltimateBase implements Ultimate {
     protected outputChannel: vscode.OutputChannel;
     protected collection: vscode.DiagnosticCollection;
 
-    //private settingsFilePath = 'results/ultimate_configuration/settings/ultimate-automizer_settings.epl';
-    //private toolchainFilePath = 'results/ultimate_configuration/toolchains/ultimate-automizer_toolchain.xml';
     protected results: UltimateResults = undefined!;
 
     protected containerIsStarted = false;

@@ -12,7 +12,6 @@ export function httpsRequest(urlOptions: string | https.RequestOptions | url.URL
     let promise = new Promise<HttpResponse>((resolve, reject) => {
         // Inspired from https://gist.github.com/ktheory/df3440b01d4b9d3197180d5254d7fb65
         const req = https.request(urlOptions, (res) => {
-            // I believe chunks can simply be joined into a string
             const chunks: any = [];
 
             res.on('data', (chunk) => chunks.push(chunk));

@@ -5,8 +5,8 @@ import { UltimateFactory } from './ultimateFactory';
 let ultimate: Ultimate;
 let verifyOnSave: boolean;
 
-// This method is called when your extension is activated
-// Your extension is activated the very first time the command is executed
+// This method is called when the extension is activated
+// The extension is activated the very first time the command is executed
 export async function activate(context: vscode.ExtensionContext): Promise<vscode.ExtensionContext> {
     initializeUltimate(context);
 
