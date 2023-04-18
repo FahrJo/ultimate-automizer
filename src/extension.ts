@@ -34,14 +34,14 @@ export async function activate(context: vscode.ExtensionContext): Promise<vscode
     return context;
 }
 
-function ultimateRunHandler() {
+function ultimateRunHandler(): void {
     if (vscode.window.activeTextEditor) {
         ultimate.runOn(vscode.window.activeTextEditor.document);
     }
 }
 
 // This method is called when your extension is deactivated
-export function deactivate() {
+export function deactivate(): void {
     ultimate.dispose();
 }
 

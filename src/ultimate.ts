@@ -52,13 +52,13 @@ export abstract class UltimateBase implements Ultimate {
         this.initLogChannel();
     }
 
-    private initLogChannel() {
+    private initLogChannel(): void {
         this.extensionContext.subscriptions.push(this.logChannel);
         this.logChannel.appendLine('Ultimate activated');
         this.logChannel.show();
     }
 
-    private initOutputChannel() {
+    private initOutputChannel(): void {
         this.extensionContext.subscriptions.push(this.outputChannel);
         this.outputChannel.appendLine('Ultimate activated');
         this.outputChannel.show();
@@ -76,11 +76,11 @@ export abstract class UltimateBase implements Ultimate {
         return this.results;
     }
 
-    public dispose() {
+    public dispose(): any {
         this.outputChannel.dispose();
     }
 
-    protected log(message: string, severity?: vscode.DiagnosticSeverity) {
+    protected log(message: string, severity?: vscode.DiagnosticSeverity): void {
         switch (severity) {
             case vscode.DiagnosticSeverity.Error:
                 this.logChannel.error(message);
@@ -96,12 +96,11 @@ export abstract class UltimateBase implements Ultimate {
         }
     }
 
-    protected embedDiagnosticInfoInto(document: vscode.TextDocument): null {
+    protected embedDiagnosticInfoInto(document: vscode.TextDocument): void {
         if (document) {
             let diagnostics = this.prepareDiagnosticInfo(document);
             this.collection.set(document.uri, diagnostics);
         }
-        return null;
     }
 
     protected abstract prepareDiagnosticInfo(document: vscode.TextDocument): vscode.Diagnostic[];
@@ -119,7 +118,7 @@ export abstract class UltimateBase implements Ultimate {
         }
     }
 
-    protected showProgressInStatusBar(title: string) {
+    protected showProgressInStatusBar(title: string): void {
         vscode.window.withProgress(
             {
                 title: title,
@@ -144,19 +143,24 @@ export abstract class UltimateBase implements Ultimate {
         );
     }
 
-    protected stopShowingProgressInStatusBar() {
+    protected stopShowingProgressInStatusBar(): void {
         this.progressCancellationToken?.cancel();
     }
 
-    protected lockUltimate() {
-        this.ultimateIsRunning = true;
+    protected lockUltimate(): boolean {
+        if (!this.ultimateIsRunning) {
+            this.ultimateIsRunning = true;
+            return true;
+        } else {
+            return false;
+        }
     }
 
-    protected freeUltimate() {
+    protected freeUltimate(): void {
         this.ultimateIsRunning = false;
     }
 
-    protected isLocked() {
+    protected isLocked(): boolean {
         return this.ultimateIsRunning;
     }
 

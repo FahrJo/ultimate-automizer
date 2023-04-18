@@ -22,9 +22,9 @@ export class UltimateByLog extends UltimateBase {
         this.setToolchain(toolchain);
     }
 
-    public setup() {}
+    public setup(): void {}
 
-    public setToolchain(path: vscode.Uri) {
+    public setToolchain(path: vscode.Uri): void {
         if (fs.existsSync(path.fsPath) && path.fsPath.match(/(.*\.xml$)/)) {
             this.toolchainFilePath = path;
         } else {
@@ -32,7 +32,7 @@ export class UltimateByLog extends UltimateBase {
         }
     }
 
-    public setSettings(path: vscode.Uri) {
+    public setSettings(path: vscode.Uri): void {
         if (fs.existsSync(path.fsPath) && path.fsPath.match(/(.*\.epf$)/)) {
             this.settingsFilePath = path;
         } else {
@@ -96,7 +96,7 @@ export class UltimateByLog extends UltimateBase {
         return this.results;
     }
 
-    private printStdoutToLog(stdout: string) {
+    private printStdoutToLog(stdout: string): void {
         let lines = stdout.split('\n');
         let outputLine: string;
         let severity: vscode.DiagnosticSeverity;
@@ -187,7 +187,7 @@ export class UltimateResultParser implements UltimateResults {
         this.parse(log);
     }
 
-    public parse(log: string) {
+    public parse(log: string): void {
         this.resultString = log.substring(log.indexOf('--- Results ---'));
 
         // Check if program was proved to be correct

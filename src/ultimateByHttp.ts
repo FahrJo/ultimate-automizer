@@ -12,7 +12,7 @@ export class UltimateByHttp extends UltimateBase {
         this.useDockerContainer = useDocker;
     }
 
-    public setup() {
+    public setup(): void {
         if (this.useDockerContainer) {
             if (this.containerIsStarted) {
                 vscode.window.showInformationMessage('Docker container already running.');
@@ -61,7 +61,7 @@ export class UltimateByHttp extends UltimateBase {
         }
     }
 
-    public fetchResults(cCode: string) {
+    public fetchResults(cCode: string): Promise<HttpResponse> {
         let values = 'action=execute';
         values += '&code=' + encodeURIComponent(cCode);
         values +=
@@ -86,7 +86,7 @@ export class UltimateByHttp extends UltimateBase {
         return httpsRequest(options);
     }
 
-    private parseResponse(httpResponse: HttpResponse) {
+    private parseResponse(httpResponse: HttpResponse): void {
         this.results = JSON.parse(httpResponse.body);
     }
 
@@ -94,7 +94,7 @@ export class UltimateByHttp extends UltimateBase {
         return this.results;
     }
 
-    protected printResultsToOutput() {
+    protected printResultsToOutput(): void {
         this.results.results.forEach((result) => {
             this.outputChannel.appendLine(`${result.logLvl}: ${result.shortDesc}`);
             this.outputChannel.appendLine(`${result.longDesc}`);
@@ -102,7 +102,7 @@ export class UltimateByHttp extends UltimateBase {
         });
     }
 
-    protected printResultsToLog() {
+    protected printResultsToLog(): void {
         this.results.results.forEach((result) => {
             let message = `${result.shortDesc}: ${result.longDesc}`;
             let severity = this.convertSeverity(result.logLvl);

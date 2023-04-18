@@ -8,7 +8,10 @@ export interface HttpResponse {
     body: string;
 }
 
-export function httpsRequest(urlOptions: string | https.RequestOptions | url.URL, data: any = '') {
+export function httpsRequest(
+    urlOptions: string | https.RequestOptions | url.URL,
+    data: any = ''
+): Promise<HttpResponse> {
     let promise = new Promise<HttpResponse>((resolve, reject) => {
         // Inspired from https://gist.github.com/ktheory/df3440b01d4b9d3197180d5254d7fb65
         const req = https.request(urlOptions, (res) => {
