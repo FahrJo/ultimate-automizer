@@ -33,10 +33,10 @@ export class UltimateByLog extends UltimateBase {
     }
 
     public setSettings(path: vscode.Uri) {
-        if (fs.existsSync(path.fsPath) && path.fsPath.match(/(.*\.epl$)|(.*\.epf$)/)) {
+        if (fs.existsSync(path.fsPath) && path.fsPath.match(/(.*\.epf$)/)) {
             this.settingsFilePath = path;
         } else {
-            console.log(`Toolchain file ${path} does not exist`);
+            console.log(`Settings file ${path} does not exist`);
         }
     }
 
@@ -51,6 +51,7 @@ export class UltimateByLog extends UltimateBase {
 
         if (!this.isLocked()) {
             this.lockUltimate();
+            this.showProgressInStatusBar('Fetching Ultimate results...');
             let cwd = this.executable.dir;
             let commandString = './' + this.executable.base;
             // prettier-ignore
@@ -75,6 +76,7 @@ export class UltimateByLog extends UltimateBase {
 
             ultimateProcess.stderr.on('data', (stderr) => {
                 this.printStdoutToLog(stderr.toString());
+                ultimateOutput += stderr;
             });
 
             ultimateProcess.on('close', (code) => {
@@ -83,6 +85,7 @@ export class UltimateByLog extends UltimateBase {
                 this.results = new UltimateResultParser(ultimateOutput);
                 this.outputChannel.appendLine(this.results.resultString);
                 this.embedDiagnosticInfoInto(document);
+                this.stopShowingProgressInStatusBar();
             });
         } else {
             console.log('Ultimate already running ...');

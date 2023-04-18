@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.2] - 2023-04-18
+
+- add command to trigger verification manually (default now)
+- verification on save is optional now
+- add indication of running ultimate in stdout mode
+
 ## [0.1.1] - 2023-04-06
 
 - add icon

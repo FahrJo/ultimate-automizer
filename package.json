@@ -2,7 +2,7 @@
     "name": "ultimate-automizer",
     "displayName": "Ultimate Automizer",
     "description": "This extension runs a formal verification on the current active C file.",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "publisher": "FahrJo",
     "contributors": [
         {
@@ -51,19 +51,39 @@
                 "ultimate.executablePath": {
                     "type": "string",
                     "default": "",
-                    "description": "Path to the executable of Ultimate is not accessed by the REST API."
+                    "description": "Path to the executable of Ultimate (is not accessed when using the REST API)."
                 },
                 "ultimate.settingsPath": {
                     "type": "string",
                     "default": "",
-                    "description": "Path to the settings (*.epl/*.epf) of Ultimate is not accessed by the REST API."
+                    "description": "Path to the settings (*.epl/*.epf) of Ultimate (is not accessed when using the REST API)."
                 },
                 "ultimate.toolchainPath": {
                     "type": "string",
                     "default": "",
-                    "description": "Path to the toolchain (*.xml) of Ultimate is not accessed by the REST API."
+                    "description": "Path to the toolchain (*.xml) of Ultimate (is not accessed when using the REST API)."
+                },
+                "ultimate.verifyOnSave": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Triggers a verification on each save (use only for cheap verification!)"
                 }
             }
+        },
+        "commands": [
+            {
+                "command": "ultimate-automizer.verifyFile",
+                "title": "Verify File",
+                "category": "Ultimate"
+            }
+        ],
+        "menus": {
+            "commandPalette": [
+                {
+                    "command": "ultimate-automizer.verifyFile",
+                    "when": "editorLangId == c"
+                }
+            ]
         }
     },
     "scripts": {
