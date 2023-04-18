@@ -62,8 +62,28 @@
                     "type": "string",
                     "default": "",
                     "description": "Path to the toolchain (*.xml) of Ultimate (is not accessed when using the REST API)."
+                },
+                "ultimate.verifyOnSave": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Triggers a verification on each save (use only for cheap verification!)"
                 }
             }
+        },
+        "commands": [
+            {
+                "command": "ultimate-automizer.verifyFile",
+                "title": "Verify File",
+                "category": "Ultimate"
+            }
+        ],
+        "menus": {
+            "commandPalette": [
+                {
+                    "command": "ultimate-automizer.verifyFile",
+                    "when": "editorLangId == c"
+                }
+            ]
         }
     },
     "scripts": {

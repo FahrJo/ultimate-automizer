@@ -3,19 +3,18 @@ import { Ultimate } from './ultimate';
 import { UltimateFactory } from './ultimateFactory';
 
 let ultimate: Ultimate;
+let verifyOnSave: boolean;
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 export async function activate(context: vscode.ExtensionContext): Promise<vscode.ExtensionContext> {
     initializeUltimate(context);
-
-    if (vscode.window.activeTextEditor) {
-        ultimate.runOn(vscode.window.activeTextEditor.document);
-    }
-
+    
     context.subscriptions.push(
         vscode.workspace.onDidSaveTextDocument((document) => {
-            ultimate.runOn(document);
+            if (verifyOnSave) {
+                ultimate.runOn(document);
+            }
         })
     );
 
@@ -27,7 +26,18 @@ export async function activate(context: vscode.ExtensionContext): Promise<vscode
             }
         })
     );
+
+    let disposable = vscode.commands.registerCommand('ultimate-automizer.verifyFile', ultimateRunHandler);
+
+	context.subscriptions.push(disposable);
+
     return context;
+}
+
+function ultimateRunHandler() {
+    if (vscode.window.activeTextEditor) {
+        ultimate.runOn(vscode.window.activeTextEditor.document);
+    }
 }
 
 // This method is called when your extension is deactivated
@@ -62,4 +72,6 @@ function initializeUltimate(context: vscode.ExtensionContext): void {
         default:
             console.log('Invalid setting for "ultimate.mode"!');
     }
+
+    verifyOnSave = vscode.workspace.getConfiguration().get('ultimate.verifyOnSave') || false;
 }
