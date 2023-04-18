@@ -4,7 +4,7 @@ This extension runs a formal verification on the current active C file. It relie
 
 ## Features
 
-After activation of this extension, on each saving of a C file, a formal verification by Ultimate Automizer on the file is performed.
+A formal verification by Ultimate Automizer on the file is performed and the results are embedded into the VS Code diagnostics.
 
 ![demonstration](images/demo.gif)
 
@@ -23,6 +23,7 @@ This extension contributes the following settings:
 * `ultimate.executablePath`: Path to the executable of Ultimate is NOT accessed by the REST API. This can either be Ultimate itself or the [wrapper script for MacOS](https://github.com/FahrJo/ultimate-automizer-docker).
 * `ultimate.settingsPath`: Path to the settings (*.epf) of Ultimate is not accessed by the REST API.
 * `ultimate.toolchainPath`: Path to the toolchain (*.xml) of Ultimate is NOT accessed by the REST API.
+* `ultimate.verifyOnSave`: Enables verification on each file save (false by default)
 
 ## Known Issues
 
@@ -32,6 +33,10 @@ This extension contributes the following settings:
 * So far there is no Dockerfile/Image available to host the REST API backend locally in a container.
 
 ## Release Notes
+
+### 0.1.2
+
+Add command to trigger verification manually (default now)
 
 ### 0.1.1
 
