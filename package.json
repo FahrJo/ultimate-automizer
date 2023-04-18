@@ -22,9 +22,7 @@
     "categories": [
         "Programming Languages"
     ],
-    "activationEvents": [
-        "onLanguage:c"
-    ],
+    "activationEvents": [],
     "main": "./out/extension.js",
     "contributes": {
         "configuration": {
