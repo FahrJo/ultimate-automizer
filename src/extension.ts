@@ -9,7 +9,7 @@ let verifyOnSave: boolean;
 // Your extension is activated the very first time the command is executed
 export async function activate(context: vscode.ExtensionContext): Promise<vscode.ExtensionContext> {
     initializeUltimate(context);
-    
+
     context.subscriptions.push(
         vscode.workspace.onDidSaveTextDocument((document) => {
             if (verifyOnSave) {
@@ -27,9 +27,9 @@ export async function activate(context: vscode.ExtensionContext): Promise<vscode
         })
     );
 
-    let disposable = vscode.commands.registerCommand('ultimate-automizer.verifyFile', ultimateRunHandler);
-
-	context.subscriptions.push(disposable);
+    context.subscriptions.push(
+        vscode.commands.registerCommand('ultimate-automizer.verifyFile', ultimateRunHandler)
+    );
 
     return context;
 }
