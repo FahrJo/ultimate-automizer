@@ -33,10 +33,10 @@ export class UltimateByLog extends UltimateBase {
     }
 
     public setSettings(path: vscode.Uri) {
-        if (fs.existsSync(path.fsPath) && path.fsPath.match(/(.*\.epl$)|(.*\.epf$)/)) {
+        if (fs.existsSync(path.fsPath) && path.fsPath.match(/(.*\.epf$)/)) {
             this.settingsFilePath = path;
         } else {
-            console.log(`Toolchain file ${path} does not exist`);
+            console.log(`Settings file ${path} does not exist`);
         }
     }
 
