@@ -19,11 +19,12 @@ Backend locally can be found [here](https://github.com/FahrJo/ultimate-automizer
 
 This extension contributes the following settings:
 
-* `ultimate.mode`: `"REST API"`/`"stdout"` to specify if Ultimate will be accessed by accessing a REST API or the output of the command line.
+* `ultimate.mode`: `"rest-api"`/`"stdout"` to specify if Ultimate will be accessed by accessing a REST API or the output of the command line.
 * `ultimate.url`: Base URL of the REST API endpoint.
+* `ultimate.refreshDelay`: Refresh rate for polling results from REST API (limited to 3 seconds for known public APIs).
 * `ultimate.executablePath`: Path to the executable of Ultimate is NOT accessed by the REST API. This can either be Ultimate itself or the [wrapper script for MacOS](https://github.com/FahrJo/ultimate-automizer-docker).
 * `ultimate.settingsPath`: Path to the settings (*.epf) of Ultimate is not accessed by the REST API.
-* `ultimate.toolchainPath`: Path to the toolchain (*.xml) of Ultimate is NOT accessed by the REST API.
+* `ultimate.toolchainPath`: Path to the toolchain (*.xml) of Ultimate. A default toolchain is used if not defined.
 * `ultimate.verifyOnSave`: Enables verification on each file save (false by default)
 
 ## Known Issues
