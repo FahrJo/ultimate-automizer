@@ -5,8 +5,8 @@ import { UltimateFactory } from './ultimateFactory';
 let ultimate: Ultimate;
 let verifyOnSave: boolean;
 
-// This method is called when your extension is activated
-// Your extension is activated the very first time the command is executed
+// This method is called when the extension is activated
+// The extension is activated the very first time the command is executed
 export async function activate(context: vscode.ExtensionContext): Promise<vscode.ExtensionContext> {
     initializeUltimate(context);
 
@@ -34,33 +34,39 @@ export async function activate(context: vscode.ExtensionContext): Promise<vscode
     return context;
 }
 
-function ultimateRunHandler() {
+function ultimateRunHandler(): void {
     if (vscode.window.activeTextEditor) {
         ultimate.runOn(vscode.window.activeTextEditor.document);
     }
 }
 
 // This method is called when your extension is deactivated
-export function deactivate() {
+export function deactivate(): void {
     ultimate.dispose();
 }
 
 function initializeUltimate(context: vscode.ExtensionContext): void {
     let mode = vscode.workspace.getConfiguration().get('ultimate.mode');
+    let settings = vscode.Uri.file(
+        vscode.workspace.getConfiguration().get('ultimate.settingsPath')!
+    );
+    let toolchain = vscode.Uri.file(
+        vscode.workspace.getConfiguration().get('ultimate.toolchainPath')!
+    );
     switch (mode) {
-        case 'REST API':
+        case 'REST API': // keep compatibility with old versions > 2.0
+        case 'rest-api':
             let ultimateUrl: string = vscode.workspace.getConfiguration().get('ultimate.url')!;
-            ultimate = UltimateFactory.createUltimateUsingPublicApi(context, ultimateUrl);
+            ultimate = UltimateFactory.createUltimateUsingRestApi(
+                context,
+                ultimateUrl,
+                settings,
+                toolchain
+            );
             break;
         case 'stdout':
             let ultimatePath = vscode.Uri.file(
                 vscode.workspace.getConfiguration().get('ultimate.executablePath')!
-            );
-            let settings = vscode.Uri.file(
-                vscode.workspace.getConfiguration().get('ultimate.settingsPath')!
-            );
-            let toolchain = vscode.Uri.file(
-                vscode.workspace.getConfiguration().get('ultimate.toolchainPath')!
             );
             ultimate = UltimateFactory.createUltimateUsingLog(
                 context,

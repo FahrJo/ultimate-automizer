@@ -1,6 +1,6 @@
 import * as http from 'http';
 import * as https from 'https';
-import * as url from 'url';
+import * as querystring from 'querystring';
 
 export interface HttpResponse {
     statusCode: number | undefined;
@@ -8,11 +8,14 @@ export interface HttpResponse {
     body: string;
 }
 
-export function httpsRequest(urlOptions: string | https.RequestOptions | url.URL, data: any = '') {
+export function unifiedHttpsRequest(
+    urlOptions: https.RequestOptions,
+    data: any = ''
+): Promise<HttpResponse> {
     let promise = new Promise<HttpResponse>((resolve, reject) => {
         // Inspired from https://gist.github.com/ktheory/df3440b01d4b9d3197180d5254d7fb65
-        const req = https.request(urlOptions, (res) => {
-            // I believe chunks can simply be joined into a string
+        let httpModule = urlOptions.protocol === 'http:' ? http : https;
+        const req = httpModule.request(urlOptions, (res) => {
             const chunks: any = [];
 
             res.on('data', (chunk) => chunks.push(chunk));
@@ -31,7 +34,7 @@ export function httpsRequest(urlOptions: string | https.RequestOptions | url.URL
         });
 
         req.on('error', reject);
-        req.write(data, 'binary');
+        req.write(querystring.stringify(data), 'binary');
         req.end();
     });
     return promise;

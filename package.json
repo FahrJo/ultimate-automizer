@@ -2,7 +2,7 @@
     "name": "ultimate-automizer",
     "displayName": "Ultimate Automizer",
     "description": "This extension runs a formal verification on the current active C file.",
-    "version": "0.1.2",
+    "version": "0.2.0",
     "publisher": "FahrJo",
     "contributors": [
         {
@@ -32,9 +32,9 @@
             "properties": {
                 "ultimate.mode": {
                     "type": "string",
-                    "default": "REST API",
+                    "default": "rest-api",
                     "enum": [
-                        "REST API",
+                        "rest-api",
                         "stdout"
                     ],
                     "enumDescriptions": [
@@ -45,8 +45,13 @@
                 },
                 "ultimate.url": {
                     "type": "string",
-                    "default": "https://monteverdi.informatik.uni-freiburg.de",
+                    "default": "https://ultimate.sopranium.de/api",
                     "description": "Base URL of the API endpoint."
+                },
+                "ultimate.refreshDelay": {
+                    "type": "number",
+                    "default": 3000,
+                    "description": "Delay between result polling in rest-api mode. If the property Url is a known public server, a delay of at least 3000 ms is enforced"
                 },
                 "ultimate.executablePath": {
                     "type": "string",
@@ -56,12 +61,12 @@
                 "ultimate.settingsPath": {
                     "type": "string",
                     "default": "",
-                    "description": "Path to the settings (*.epl/*.epf) of Ultimate (is not accessed when using the REST API)."
+                    "description": "Path to the settings (*.epl/*.epf) of Ultimate (is not accessed when using the REST API). A default toolchain is used if not defined"
                 },
                 "ultimate.toolchainPath": {
                     "type": "string",
                     "default": "",
-                    "description": "Path to the toolchain (*.xml) of Ultimate (is not accessed when using the REST API)."
+                    "description": "Path to the toolchain (*.xml) of Ultimate. A default toolchain is used if not defined."
                 },
                 "ultimate.verifyOnSave": {
                     "type": "boolean",

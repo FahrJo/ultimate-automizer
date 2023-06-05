@@ -3,6 +3,11 @@ import { Ultimate } from './ultimate';
 import { UltimateByHttp } from './ultimateByHttp';
 import { UltimateByLog } from './ultimateByLog';
 
+const publicKnownAPIs = [
+    'https://ultimate.sopranium.de/api',
+    'https://monteverdi.informatik.uni-freiburg.de',
+];
+
 export class UltimateFactory {
     static createUltimateUsingLog(
         context: vscode.ExtensionContext,
@@ -10,18 +15,25 @@ export class UltimateFactory {
         settings: vscode.Uri,
         toolchain: vscode.Uri
     ): Ultimate {
-        return new UltimateByLog(context, executable, settings, toolchain);
+        let newUltimateInstance = new UltimateByLog(context, executable, settings, toolchain);
+        return newUltimateInstance;
     }
 
-    static createUltimateUsingPublicApi(
+    static createUltimateUsingRestApi(
         context: vscode.ExtensionContext,
-        baseUrl?: string
+        apiUrl: string,
+        settings: vscode.Uri,
+        toolchain: vscode.Uri
     ): Ultimate {
-        let defaultUrl = 'https://monteverdi.informatik.uni-freiburg.de';
-        return new UltimateByHttp(context, false, baseUrl || defaultUrl);
-    }
+        let newUltimateInstance = new UltimateByHttp(context, settings, toolchain, apiUrl);
+        let refreshTime: number =
+            vscode.workspace.getConfiguration().get('ultimate.refreshRate') || 3000;
 
-    static createUltimateUsingOwnDockerContainer(context: vscode.ExtensionContext): Ultimate {
-        return new UltimateByHttp(context, true);
+        if (publicKnownAPIs.includes(apiUrl)) {
+            refreshTime = Math.min(3000, refreshTime);
+        }
+
+        newUltimateInstance.refreshTimeInMilliseconds = refreshTime;
+        return newUltimateInstance;
     }
 }

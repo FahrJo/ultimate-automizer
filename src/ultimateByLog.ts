@@ -1,14 +1,11 @@
 import * as cp from 'child_process';
-import * as fs from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
-import { SingleUltimateResult, UltimateBase, UltimateResults } from './ultimate';
+import { SingleUltimateResult, UltimateBase } from './ultimate';
 
 export class UltimateByLog extends UltimateBase {
     private executable: path.ParsedPath;
-    private settingsFilePath = vscode.Uri.file('');
-    private toolchainFilePath = vscode.Uri.file('');
-    protected results = new UltimateResultParser('');
+    protected response = new UltimateResultParser('');
 
     constructor(
         context: vscode.ExtensionContext,
@@ -18,26 +15,8 @@ export class UltimateByLog extends UltimateBase {
     ) {
         super(context);
         this.executable = path.parse(executable.fsPath);
-        this.setSettings(settings);
-        this.setToolchain(toolchain);
-    }
-
-    public setup() {}
-
-    public setToolchain(path: vscode.Uri) {
-        if (fs.existsSync(path.fsPath) && path.fsPath.match(/(.*\.xml$)/)) {
-            this.toolchainFilePath = path;
-        } else {
-            console.log(`Toolchain file ${path} does not exist`);
-        }
-    }
-
-    public setSettings(path: vscode.Uri) {
-        if (fs.existsSync(path.fsPath) && path.fsPath.match(/(.*\.epf$)/)) {
-            this.settingsFilePath = path;
-        } else {
-            console.log(`Settings file ${path} does not exist`);
-        }
+        this.setSettingsFile(settings);
+        this.setToolchainFile(toolchain);
     }
 
     // TODO: Run on String!
@@ -82,8 +61,9 @@ export class UltimateByLog extends UltimateBase {
             ultimateProcess.on('close', (code) => {
                 console.log(`child process exited with code ${code}`);
                 this.freeUltimate();
-                this.results = new UltimateResultParser(ultimateOutput);
-                this.outputChannel.appendLine(this.results.resultString);
+                this.response = new UltimateResultParser(ultimateOutput);
+                this.results = this.response.results;
+                this.outputChannel.appendLine(this.response.resultString);
                 this.embedDiagnosticInfoInto(document);
                 this.stopShowingProgressInStatusBar();
             });
@@ -92,11 +72,7 @@ export class UltimateByLog extends UltimateBase {
         }
     }
 
-    public getResultsOfLastRun(): UltimateResults {
-        return this.results;
-    }
-
-    private printStdoutToLog(stdout: string) {
+    private printStdoutToLog(stdout: string): void {
         let lines = stdout.split('\n');
         let outputLine: string;
         let severity: vscode.DiagnosticSeverity;
@@ -130,21 +106,21 @@ export class UltimateByLog extends UltimateBase {
     protected prepareDiagnosticInfo(document: vscode.TextDocument): vscode.Diagnostic[] {
         let diagnostics: vscode.Diagnostic[] = [];
         let relatedInformation: vscode.DiagnosticRelatedInformation[] = [];
-        if (!this.results.provedSuccessfully) {
-            let message = this.results.message;
-            let range = document.lineAt(this.results.messageLine).range;
+        if (!this.response.provedSuccessfully) {
+            let message = this.response.message;
+            let range = document.lineAt(this.response.messageLine).range;
 
-            if (this.results.reason && this.results.reasonLine) {
+            if (this.response.reason && this.response.reasonLine) {
                 let relatedInfoLocation = new vscode.Location(
                     document.uri,
                     new vscode.Position(0, 0)
                 );
-                if (this.results.reasonLine >= 0) {
-                    let relatedInfoRange = document.lineAt(this.results.reasonLine).range;
+                if (this.response.reasonLine >= 0) {
+                    let relatedInfoRange = document.lineAt(this.response.reasonLine).range;
                     relatedInfoLocation = new vscode.Location(document.uri, relatedInfoRange);
                 }
 
-                let relatedInfoMessage = this.results.reason;
+                let relatedInfoMessage = this.response.reason;
                 relatedInformation.push(
                     new vscode.DiagnosticRelatedInformation(relatedInfoLocation, relatedInfoMessage)
                 );
@@ -171,7 +147,7 @@ const REGEX_COUNTEREXAMPLE =
     /CounterExampleResult \[Line: (\d*)\]: (.*)\n (.*)\n(\D*):(.*)((.|\n)*)\n\n/;
 const REGEX_UNSUPPORTED_SYNTAX = /UnsupportedSyntaxResult \[Line: (.*)\]: (.*)\n/;
 
-export class UltimateResultParser implements UltimateResults {
+export class UltimateResultParser {
     public resultString: string = '';
     public provedSuccessfully: boolean = false;
     public message: string = '';
@@ -181,13 +157,12 @@ export class UltimateResultParser implements UltimateResults {
 
     // Interface parameters from UltimateResults
     public results: SingleUltimateResult[] = [];
-    public status = 'success';
 
     constructor(log: string) {
         this.parse(log);
     }
 
-    public parse(log: string) {
+    public parse(log: string): void {
         this.resultString = log.substring(log.indexOf('--- Results ---'));
 
         // Check if program was proved to be correct

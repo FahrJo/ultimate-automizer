@@ -1,10 +1,6 @@
 import * as vscode from 'vscode';
+import * as fs from 'fs';
 export interface Ultimate {
-    /**
-     * Initializes the external tool
-     */
-    setup(): any;
-
     /**
      * Execute Ultimate Automizer on the current active file
      * @param code C code to verify
@@ -20,7 +16,7 @@ export interface Ultimate {
     /**
      * Returns the results of the last execution of verification
      */
-    getResultsOfLastRun(): UltimateResults;
+    getResultsOfLastRun(): SingleUltimateResult[];
 
     /**
      * Stop and terminate the verification tool
@@ -34,11 +30,12 @@ export abstract class UltimateBase implements Ultimate {
     protected outputChannel: vscode.OutputChannel;
     protected collection: vscode.DiagnosticCollection;
 
-    //private settingsFilePath = 'results/ultimate_configuration/settings/ultimate-automizer_settings.epl';
-    //private toolchainFilePath = 'results/ultimate_configuration/toolchains/ultimate-automizer_toolchain.xml';
-    protected results: UltimateResults = undefined!;
+    //protected response: UltimateResponse = undefined!;
+    protected results: SingleUltimateResult[] = [];
+    protected error: string | undefined;
+    protected settingsFilePath = vscode.Uri.file('');
+    protected toolchainFilePath = vscode.Uri.file('');
 
-    protected containerIsStarted = false;
     private ultimateIsRunning = false;
     private progressCancellationToken: vscode.CancellationTokenSource | null = null;
 
@@ -54,19 +51,32 @@ export abstract class UltimateBase implements Ultimate {
         this.initLogChannel();
     }
 
-    private initLogChannel() {
+    private initLogChannel(): void {
         this.extensionContext.subscriptions.push(this.logChannel);
-        this.logChannel.appendLine('Hello Ultimate!');
+        this.logChannel.appendLine('Ultimate activated');
         this.logChannel.show();
     }
 
-    private initOutputChannel() {
+    private initOutputChannel(): void {
         this.extensionContext.subscriptions.push(this.outputChannel);
-        this.outputChannel.appendLine('Hello Ultimate!');
-        this.outputChannel.show();
+        this.outputChannel.appendLine('Ultimate activated');
     }
 
-    public abstract setup(): any;
+    public setToolchainFile(path: vscode.Uri): void {
+        if (fs.existsSync(path.fsPath) && path.fsPath.match(/(.*\.xml$)/)) {
+            this.toolchainFilePath = path;
+        } else {
+            console.log(`Toolchain file ${path} does not exist`);
+        }
+    }
+
+    public setSettingsFile(path: vscode.Uri): void {
+        if (fs.existsSync(path.fsPath) && path.fsPath.match(/(.*\.epf$)/)) {
+            this.settingsFilePath = path;
+        } else {
+            console.log(`Settings file ${path} does not exist`);
+        }
+    }
 
     // Execute Ultimate Automizer on C code
     public abstract runOn(code: string): void;
@@ -74,15 +84,15 @@ export abstract class UltimateBase implements Ultimate {
     // Execute Ultimate Automizer on the current active file
     public abstract runOn(document: vscode.TextDocument): void;
 
-    public getResultsOfLastRun(): UltimateResults {
+    public getResultsOfLastRun(): SingleUltimateResult[] {
         return this.results;
     }
 
-    public dispose() {
+    public dispose(): any {
         this.outputChannel.dispose();
     }
 
-    protected log(message: string, severity?: vscode.DiagnosticSeverity) {
+    protected log(message: string, severity?: vscode.DiagnosticSeverity): void {
         switch (severity) {
             case vscode.DiagnosticSeverity.Error:
                 this.logChannel.error(message);
@@ -98,12 +108,11 @@ export abstract class UltimateBase implements Ultimate {
         }
     }
 
-    protected embedDiagnosticInfoInto(document: vscode.TextDocument): null {
+    protected embedDiagnosticInfoInto(document: vscode.TextDocument): void {
         if (document) {
             let diagnostics = this.prepareDiagnosticInfo(document);
             this.collection.set(document.uri, diagnostics);
         }
-        return null;
     }
 
     protected abstract prepareDiagnosticInfo(document: vscode.TextDocument): vscode.Diagnostic[];
@@ -121,7 +130,7 @@ export abstract class UltimateBase implements Ultimate {
         }
     }
 
-    protected showProgressInStatusBar(title: string) {
+    protected showProgressInStatusBar(title: string): void {
         vscode.window.withProgress(
             {
                 title: title,
@@ -146,19 +155,24 @@ export abstract class UltimateBase implements Ultimate {
         );
     }
 
-    protected stopShowingProgressInStatusBar() {
+    protected stopShowingProgressInStatusBar(): void {
         this.progressCancellationToken?.cancel();
     }
 
-    protected lockUltimate() {
-        this.ultimateIsRunning = true;
+    protected lockUltimate(): boolean {
+        if (!this.ultimateIsRunning) {
+            this.ultimateIsRunning = true;
+            return true;
+        } else {
+            return false;
+        }
     }
 
-    protected freeUltimate() {
+    protected freeUltimate(): void {
         this.ultimateIsRunning = false;
     }
 
-    protected isLocked() {
+    protected isLocked(): boolean {
         return this.ultimateIsRunning;
     }
 
@@ -176,9 +190,4 @@ export interface SingleUltimateResult {
     shortDesc: string;
     type: string;
     longDesc: string;
-}
-
-export interface UltimateResults {
-    results: SingleUltimateResult[];
-    status: string;
 }
