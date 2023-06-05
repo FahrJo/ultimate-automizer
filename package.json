@@ -61,7 +61,7 @@
                 "ultimate.settingsPath": {
                     "type": "string",
                     "default": "",
-                    "description": "Path to the settings (*.epl/*.epf) of Ultimate (is not accessed when using the REST API). A default toolchain is used if not defined"
+                    "description": "Path to the settings (*.epl/*.epf) of Ultimate (is not accessed when using the REST API)."
                 },
                 "ultimate.toolchainPath": {
                     "type": "string",
