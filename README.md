@@ -10,9 +10,10 @@ A formal verification by Ultimate Automizer on the file is performed and the res
 
 ## Requirements
 
-Connection to a public server running Ultimate Automizer, e.g. <https://monteverdi.informatik.uni-freiburg.de/> or <https://ultimate.sopranium.de>.
+Connection to a public server running Ultimate Automizer, e.g. <https://ultimate.sopranium.de/api>.
 
-Alternatively a container providing the API can be executed inside Docker.
+Alternatively a container providing the API can be executed inside Docker. A dockerfile to host the
+Backend locally can be found [here](https://github.com/FahrJo/ultimate-automizer-docker).
 
 ## Extension Settings
 
@@ -29,10 +30,13 @@ This extension contributes the following settings:
 
 * Make sure the right Java version us used as default version if running Ultimate locally.
 * Windows version only working properly by using the REST API mode since Ultimate 0.2.3 was not working on my Windows test machine properly.
-* The result representation (code highlighting, log output etc.) so far looks differently for `REST API` and `stdout` mode. This is due to the output of Ultimate in the two different modes.
-* So far there is no Dockerfile/Image available to host the REST API backend locally in a container.
+* The result representation (code highlighting, log output etc.) so far looks differently for `rest-api` and `stdout` mode. This is due to the output of Ultimate in the two different modes.
 
 ## Release Notes
+
+### 0.2.0
+
+Change to new REST-API of Ultimate
 
 ### 0.1.2
 

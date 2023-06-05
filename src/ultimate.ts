@@ -1,10 +1,6 @@
 import * as vscode from 'vscode';
+import * as fs from 'fs';
 export interface Ultimate {
-    /**
-     * Initializes the external tool
-     */
-    setup(): any;
-
     /**
      * Execute Ultimate Automizer on the current active file
      * @param code C code to verify
@@ -37,8 +33,9 @@ export abstract class UltimateBase implements Ultimate {
     //protected response: UltimateResponse = undefined!;
     protected results: SingleUltimateResult[] = [];
     protected error: string | undefined;
+    protected settingsFilePath = vscode.Uri.file('');
+    protected toolchainFilePath = vscode.Uri.file('');
 
-    protected containerIsStarted = false;
     private ultimateIsRunning = false;
     private progressCancellationToken: vscode.CancellationTokenSource | null = null;
 
@@ -63,10 +60,23 @@ export abstract class UltimateBase implements Ultimate {
     private initOutputChannel(): void {
         this.extensionContext.subscriptions.push(this.outputChannel);
         this.outputChannel.appendLine('Ultimate activated');
-        this.outputChannel.show();
     }
 
-    public abstract setup(): any;
+    public setToolchainFile(path: vscode.Uri): void {
+        if (fs.existsSync(path.fsPath) && path.fsPath.match(/(.*\.xml$)/)) {
+            this.toolchainFilePath = path;
+        } else {
+            console.log(`Toolchain file ${path} does not exist`);
+        }
+    }
+
+    public setSettingsFile(path: vscode.Uri): void {
+        if (fs.existsSync(path.fsPath) && path.fsPath.match(/(.*\.epf$)/)) {
+            this.settingsFilePath = path;
+        } else {
+            console.log(`Settings file ${path} does not exist`);
+        }
+    }
 
     // Execute Ultimate Automizer on C code
     public abstract runOn(code: string): void;

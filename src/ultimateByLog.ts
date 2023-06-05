@@ -1,13 +1,10 @@
 import * as cp from 'child_process';
-import * as fs from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
 import { SingleUltimateResult, UltimateBase } from './ultimate';
 
 export class UltimateByLog extends UltimateBase {
     private executable: path.ParsedPath;
-    private settingsFilePath = vscode.Uri.file('');
-    private toolchainFilePath = vscode.Uri.file('');
     protected response = new UltimateResultParser('');
 
     constructor(
@@ -18,26 +15,8 @@ export class UltimateByLog extends UltimateBase {
     ) {
         super(context);
         this.executable = path.parse(executable.fsPath);
-        this.setSettings(settings);
-        this.setToolchain(toolchain);
-    }
-
-    public setup(): void {}
-
-    public setToolchain(path: vscode.Uri): void {
-        if (fs.existsSync(path.fsPath) && path.fsPath.match(/(.*\.xml$)/)) {
-            this.toolchainFilePath = path;
-        } else {
-            console.log(`Toolchain file ${path} does not exist`);
-        }
-    }
-
-    public setSettings(path: vscode.Uri): void {
-        if (fs.existsSync(path.fsPath) && path.fsPath.match(/(.*\.epf$)/)) {
-            this.settingsFilePath = path;
-        } else {
-            console.log(`Settings file ${path} does not exist`);
-        }
+        this.setSettingsFile(settings);
+        this.setToolchainFile(toolchain);
     }
 
     // TODO: Run on String!

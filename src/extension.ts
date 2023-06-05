@@ -47,20 +47,26 @@ export function deactivate(): void {
 
 function initializeUltimate(context: vscode.ExtensionContext): void {
     let mode = vscode.workspace.getConfiguration().get('ultimate.mode');
+    let settings = vscode.Uri.file(
+        vscode.workspace.getConfiguration().get('ultimate.settingsPath')!
+    );
+    let toolchain = vscode.Uri.file(
+        vscode.workspace.getConfiguration().get('ultimate.toolchainPath')!
+    );
     switch (mode) {
-        case 'REST API':
+        case 'REST API': // keep compatibility with old versions > 2.0
+        case 'rest-api':
             let ultimateUrl: string = vscode.workspace.getConfiguration().get('ultimate.url')!;
-            ultimate = UltimateFactory.createUltimateUsingPublicApi(context, ultimateUrl);
+            ultimate = UltimateFactory.createUltimateUsingRestApi(
+                context,
+                ultimateUrl,
+                settings,
+                toolchain
+            );
             break;
         case 'stdout':
             let ultimatePath = vscode.Uri.file(
                 vscode.workspace.getConfiguration().get('ultimate.executablePath')!
-            );
-            let settings = vscode.Uri.file(
-                vscode.workspace.getConfiguration().get('ultimate.settingsPath')!
-            );
-            let toolchain = vscode.Uri.file(
-                vscode.workspace.getConfiguration().get('ultimate.toolchainPath')!
             );
             ultimate = UltimateFactory.createUltimateUsingLog(
                 context,
