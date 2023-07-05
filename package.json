@@ -61,7 +61,7 @@
                 "ultimate.settingsPath": {
                     "type": "string",
                     "default": "",
-                    "description": "Path to the settings (*.epl/*.epf) of Ultimate (is not accessed when using the REST API). A default toolchain is used if not defined"
+                    "description": "Path to the settings (*.epl/*.epf) of Ultimate (is not accessed when using the REST API)."
                 },
                 "ultimate.toolchainPath": {
                     "type": "string",
@@ -103,15 +103,15 @@
     "devDependencies": {
         "@types/glob": "^8.1.0",
         "@types/mocha": "^10.0.1",
-        "@types/node": "16.x",
-        "@types/vscode": "^1.76.0",
-        "@typescript-eslint/eslint-plugin": "^5.53.0",
-        "@typescript-eslint/parser": "^5.53.0",
-        "@vscode/test-electron": "^2.2.3",
-        "esbuild": "^0.17.12",
-        "eslint": "^8.34.0",
-        "glob": "^8.1.0",
+        "@types/node": "20.x",
+        "@types/vscode": "^1.79.1",
+        "@typescript-eslint/eslint-plugin": "^5.61.0",
+        "@typescript-eslint/parser": "^5.61.0",
+        "@vscode/test-electron": "^2.3.3",
+        "esbuild": "^0.18.11",
+        "eslint": "^8.44.0",
+        "glob": "^10.3.1",
         "mocha": "^10.2.0",
-        "typescript": "^4.9.5"
+        "typescript": "^5.1.6"
     }
 }
