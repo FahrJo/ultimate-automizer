@@ -90,11 +90,11 @@ export class UltimateByHttp extends UltimateBase {
         let toolchain = `<rundefinition>
                             <name>CAutomizerTC</name>
                             <toolchain>
-                            <plugin id=\"de.uni_freiburg.informatik.ultimate.plugins.analysis.syntaxchecker\"/>
-                            <plugin id=\"de.uni_freiburg.informatik.ultimate.plugins.generator.cacsl2boogietranslator\"/>
-                            <plugin id=\"de.uni_freiburg.informatik.ultimate.boogie.preprocessor\"/>
-                            <plugin id=\"de.uni_freiburg.informatik.ultimate.plugins.generator.rcfgbuilder\"/>
-                            <plugin id=\"de.uni_freiburg.informatik.ultimate.plugins.generator.traceabstraction\"/>
+                            <plugin id="de.uni_freiburg.informatik.ultimate.plugins.analysis.syntaxchecker"/>
+                            <plugin id="de.uni_freiburg.informatik.ultimate.plugins.generator.cacsl2boogietranslator"/>
+                            <plugin id="de.uni_freiburg.informatik.ultimate.boogie.preprocessor"/>
+                            <plugin id="de.uni_freiburg.informatik.ultimate.plugins.generator.rcfgbuilder"/>
+                            <plugin id="de.uni_freiburg.informatik.ultimate.plugins.generator.traceabstraction"/>
                             </toolchain>
                         </rundefinition>`;
         if (
@@ -192,7 +192,7 @@ export class UltimateByHttp extends UltimateBase {
         this.results.forEach((result) => {
             if (this.resultIsWorthEmbedding(result)) {
                 let relatedInformation: vscode.DiagnosticRelatedInformation[] = [];
-                let reasonInformation = result.longDesc.match(/Reason: (\D*)(\d*)(.*)\n/);
+                let reasonInformation = RegExp(/Reason: (\D*)(\d*)(.*)\n/).exec(result.longDesc);
 
                 if (reasonInformation) {
                     let relatedLine = Number(reasonInformation[2]);

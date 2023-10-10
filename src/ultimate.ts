@@ -63,7 +63,7 @@ export abstract class UltimateBase implements Ultimate {
     }
 
     public setToolchainFile(path: vscode.Uri): void {
-        if (fs.existsSync(path.fsPath) && path.fsPath.match(/(.*\.xml$)/)) {
+        if (fs.existsSync(path.fsPath) && RegExp(/(.*\.xml$)/).exec(path.fsPath)) {
             this.toolchainFilePath = path;
         } else {
             console.log(`Toolchain file ${path} does not exist`);
@@ -71,7 +71,7 @@ export abstract class UltimateBase implements Ultimate {
     }
 
     public setSettingsFile(path: vscode.Uri): void {
-        if (fs.existsSync(path.fsPath) && path.fsPath.match(/(.*\.epf$)/)) {
+        if (fs.existsSync(path.fsPath) && RegExp(/(.*\.epf$)/).exec(path.fsPath)) {
             this.settingsFilePath = path;
         } else {
             console.log(`Settings file ${path} does not exist`);
@@ -144,7 +144,6 @@ export abstract class UltimateBase implements Ultimate {
                         this.progressCancellationToken?.dispose();
                         this.progressCancellationToken = null;
                         resolve(null);
-                        return;
                     });
 
                     setTimeout(() => {
@@ -176,7 +175,7 @@ export abstract class UltimateBase implements Ultimate {
         return this.ultimateIsRunning;
     }
 
-    public isDocument(obj: any | vscode.TextDocument): obj is vscode.TextDocument {
+    public isDocument(obj: any): obj is vscode.TextDocument {
         return true;
     }
 }
