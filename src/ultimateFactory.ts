@@ -27,7 +27,7 @@ export class UltimateFactory {
     ): Ultimate {
         let newUltimateInstance = new UltimateByHttp(context, settings, toolchain, apiUrl);
         let refreshTime: number =
-            vscode.workspace.getConfiguration().get('ultimate.refreshRate') || 3000;
+            vscode.workspace.getConfiguration().get('ultimate.refreshRate') ?? 3000;
 
         if (publicKnownAPIs.includes(apiUrl)) {
             refreshTime = Math.min(3000, refreshTime);
