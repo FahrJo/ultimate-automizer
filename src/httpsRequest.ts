@@ -12,7 +12,7 @@ export function unifiedHttpsRequest(
     urlOptions: https.RequestOptions,
     data: any = ''
 ): Promise<HttpResponse> {
-    let promise = new Promise<HttpResponse>((resolve, reject) => {
+    return new Promise<HttpResponse>((resolve, reject) => {
         // Inspired from https://gist.github.com/ktheory/df3440b01d4b9d3197180d5254d7fb65
         let httpModule = urlOptions.protocol === 'http:' ? http : https;
         const req = httpModule.request(urlOptions, (res) => {
@@ -37,5 +37,4 @@ export function unifiedHttpsRequest(
         req.write(querystring.stringify(data), 'binary');
         req.end();
     });
-    return promise;
 }

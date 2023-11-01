@@ -35,6 +35,10 @@ This extension contributes the following settings:
 
 ## Release Notes
 
+### 0.2.2
+
+Add support for highlighting assertions where context from Ultimate is missing
+
 ### 0.2.0
 
 Change to new REST-API of Ultimate
