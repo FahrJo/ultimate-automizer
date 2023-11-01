@@ -90,11 +90,11 @@ export class UltimateByHttp extends UltimateBase {
         let toolchain = `<rundefinition>
                             <name>CAutomizerTC</name>
                             <toolchain>
-                            <plugin id=\"de.uni_freiburg.informatik.ultimate.plugins.analysis.syntaxchecker\"/>
-                            <plugin id=\"de.uni_freiburg.informatik.ultimate.plugins.generator.cacsl2boogietranslator\"/>
-                            <plugin id=\"de.uni_freiburg.informatik.ultimate.boogie.preprocessor\"/>
-                            <plugin id=\"de.uni_freiburg.informatik.ultimate.plugins.generator.rcfgbuilder\"/>
-                            <plugin id=\"de.uni_freiburg.informatik.ultimate.plugins.generator.traceabstraction\"/>
+                            <plugin id="de.uni_freiburg.informatik.ultimate.plugins.analysis.syntaxchecker"/>
+                            <plugin id="de.uni_freiburg.informatik.ultimate.plugins.generator.cacsl2boogietranslator"/>
+                            <plugin id="de.uni_freiburg.informatik.ultimate.boogie.preprocessor"/>
+                            <plugin id="de.uni_freiburg.informatik.ultimate.plugins.generator.rcfgbuilder"/>
+                            <plugin id="de.uni_freiburg.informatik.ultimate.plugins.generator.traceabstraction"/>
                             </toolchain>
                         </rundefinition>`;
         if (
@@ -192,7 +192,7 @@ export class UltimateByHttp extends UltimateBase {
         this.results.forEach((result) => {
             if (this.resultIsWorthEmbedding(result)) {
                 let relatedInformation: vscode.DiagnosticRelatedInformation[] = [];
-                let reasonInformation = result.longDesc.match(/Reason: (\D*)(\d*)(.*)\n/);
+                let reasonInformation = RegExp(/Reason: (\D*)(\d*)(.*)\n/).exec(result.longDesc);
 
                 if (reasonInformation) {
                     let relatedLine = Number(reasonInformation[2]);
@@ -209,7 +209,7 @@ export class UltimateByHttp extends UltimateBase {
                 diagnostics.push({
                     code: '',
                     message: result.shortDesc,
-                    range: this.getResultRange(result),
+                    range: this.getResultRange(result, document),
                     severity: this.convertSeverity(result.logLvl),
                     source: 'Ultimate Automizer',
                     relatedInformation: relatedInformation,
@@ -219,11 +219,31 @@ export class UltimateByHttp extends UltimateBase {
         return diagnostics;
     }
 
-    private getResultRange(result: SingleUltimateResult): vscode.Range {
+    private getResultRange(
+        result: SingleUltimateResult,
+        document: vscode.TextDocument
+    ): vscode.Range {
         let startLNr = result.startLNr > 0 ? result.startLNr - 1 : 0;
-        let startCol = result.startCol >= 0 ? result.startCol : 0;
         let endLNr = result.endLNr > 0 ? result.endLNr - 1 : 0;
-        let endCol = result.endCol >= 0 ? result.endCol : 0;
+        let assertFinding: RegExpExecArray | null = null;
+        let startCol = 0;
+        let endCol = 0;
+
+        if (startLNr > 0) {
+            assertFinding = RegExp(/assert(.*);/).exec(document.lineAt(startLNr).text);
+        }
+
+        if (result.startCol >= 0 && result.endCol >= 0) {
+            // Use column information from Ultimate if available
+            startCol = result.startCol;
+            endCol = result.endCol;
+        } else if (assertFinding) {
+            // Try to detect the columns from the file as fallback if no proper information came
+            // back from Ultimate.
+            startCol = assertFinding.index;
+            endCol = startCol + assertFinding[0].length;
+        }
+
         return new vscode.Range(startLNr, startCol, endLNr, endCol);
     }
 

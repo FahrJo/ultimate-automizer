@@ -78,11 +78,12 @@ export class UltimateByLog extends UltimateBase {
         let severity: vscode.DiagnosticSeverity;
 
         for (const line of lines) {
-            if (line.match(/^(?!\s*$).+/)) {
+            if (RegExp(/^(?!\s*$).+/).exec(line)) {
                 // line not empty
-                let errorLine = line.match(/[0-9]{3} ERROR (.*)/);
-                let warningLine = line.match(/[0-9]{3} WARN (.*)/) || line.match(/WARNING: (.*)/);
-                let infoLine = line.match(/[0-9]{3} INFO (.*)/);
+                let errorLine = RegExp(/\d{3} ERROR (.*)/).exec(line);
+                let warningLine =
+                    RegExp(/\d{3} WARN (.*)/).exec(line) ?? RegExp(/WARNING: (.*)/).exec(line);
+                let infoLine = RegExp(/\d{3} INFO (.*)/).exec(line);
 
                 if (errorLine) {
                     outputLine = errorLine[1];
@@ -167,10 +168,10 @@ export class UltimateResultParser {
 
         // Check if program was proved to be correct
         this.provedSuccessfully = this.resultString.includes('AllSpecificationsHoldResult');
-        let counterexampleResult = this.resultString.match(REGEX_COUNTEREXAMPLE);
-        let unprovableResult = this.resultString.match(REGEX_UNPROVABLE);
-        let unsupportedSyntaxResult = this.resultString.match(REGEX_UNSUPPORTED_SYNTAX);
-        let errorResult = unsupportedSyntaxResult || counterexampleResult || unprovableResult;
+        let counterexampleResult = RegExp(REGEX_COUNTEREXAMPLE).exec(this.resultString);
+        let unprovableResult = RegExp(REGEX_UNPROVABLE).exec(this.resultString);
+        let unsupportedSyntaxResult = RegExp(REGEX_UNSUPPORTED_SYNTAX).exec(this.resultString);
+        let errorResult = unsupportedSyntaxResult ?? counterexampleResult ?? unprovableResult;
 
         if (this.provedSuccessfully) {
             this.message = 'Program was proved to be correct';
@@ -191,7 +192,7 @@ export class UltimateResultParser {
             logLvl: errorResult ? 'warning' : 'info',
             shortDesc: this.message,
             type: this.provedSuccessfully ? 'positive' : 'unprovable',
-            longDesc: this.reason || '',
+            longDesc: this.reason ?? '',
         };
         this.results = [result];
     }

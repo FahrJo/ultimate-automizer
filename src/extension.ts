@@ -79,5 +79,5 @@ function initializeUltimate(context: vscode.ExtensionContext): void {
             console.log('Invalid setting for "ultimate.mode"!');
     }
 
-    verifyOnSave = vscode.workspace.getConfiguration().get('ultimate.verifyOnSave') || false;
+    verifyOnSave = vscode.workspace.getConfiguration().get('ultimate.verifyOnSave') ?? false;
 }
