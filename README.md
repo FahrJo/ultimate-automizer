@@ -29,8 +29,8 @@ This extension contributes the following settings:
 
 ## Known Issues
 
-* Make sure the right Java version us used as default version if running Ultimate locally.
-* Windows version only working properly by using the REST API mode since Ultimate 0.2.3 was not working on my Windows test machine properly.
+* Make sure the right Java version is used as default version if running Ultimate locally.
+* Windows version only working tested using the REST API mode since Ultimate 0.2.3 was not working on my Windows test machine properly.
 * The result representation (code highlighting, log output etc.) so far looks differently for `rest-api` and `stdout` mode. This is due to the output of Ultimate in the two different modes.
 
 ## Release Notes
