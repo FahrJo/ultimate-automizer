@@ -67,21 +67,10 @@ export class UltimateByHttp extends UltimateBase {
             /* eslint-enable @typescript-eslint/naming-convention */
         };
 
-        let defaultPort = this.apiUrl.protocol === 'http:' ? 80 : 443;
-
-        let options = {
-            protocol: this.apiUrl.protocol,
-            hostname: this.apiUrl.hostname,
-            port: this.apiUrl.port || defaultPort,
-            path: this.apiUrl.pathname,
-            method: 'POST',
-            headers: {
-                /* eslint-disable @typescript-eslint/naming-convention */
-                'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
-                'Connection': 'keep-alive',
-                /* eslint-enable @typescript-eslint/naming-convention */
-            },
-        };
+        let options = this.getCommonHttpOptions();
+        options.method = 'POST';
+        options.path = this.apiUrl.pathname;
+        options.headers['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';
 
         return unifiedHttpsRequest(options, body);
     }
@@ -129,21 +118,8 @@ export class UltimateByHttp extends UltimateBase {
     }
 
     private pollResults(): Promise<HttpResponse> {
-        let defaultPort = this.apiUrl.protocol === 'http:' ? 80 : 443;
-
-        let options = {
-            protocol: this.apiUrl.protocol,
-            hostname: this.apiUrl.hostname,
-            port: this.apiUrl.port || defaultPort,
-            path: this.apiUrl.pathname + '/job/get/' + this.requestId,
-            method: 'GET',
-            headers: {
-                /* eslint-disable @typescript-eslint/naming-convention */
-                Accept: '*/*',
-                Connection: 'keep-alive',
-                /* eslint-enable @typescript-eslint/naming-convention */
-            },
-        };
+        let options = this.getCommonHttpOptions();
+        options.path = this.apiUrl.pathname + '/job/get/' + this.requestId;
 
         return unifiedHttpsRequest(options).then((httpResponse): any => {
             let response = JSON.parse(httpResponse.body);
@@ -183,6 +159,31 @@ export class UltimateByHttp extends UltimateBase {
             let message = `${result.shortDesc}: ${result.longDesc}`;
             let severity = this.convertSeverity(result.logLvl);
             this.log(message, severity);
+        });
+    }
+
+    protected stopUltimate(): void {
+        let options = this.getCommonHttpOptions();
+        options.path = this.apiUrl.pathname + '/job/delete/' + this.requestId;
+
+        unifiedHttpsRequest(options).then((httpResponse): any => {
+            let response = JSON.parse(httpResponse.body);
+            switch (response.status.toLowerCase()) {
+                case 'done':
+                    this.results = response.results;
+                    this.outputChannel.appendLine('Fetching Ultimate results stopped.');
+                    break;
+                case 'error':
+                    this.outputChannel.appendLine(
+                        'An error occured, fetching Ultimate results could not be stopped.'
+                    );
+                    break;
+                default:
+                    // repeat polling recursively at given timeouts
+                    return this.delay(this.refreshTimeInMilliseconds).then(() =>
+                        this.pollResults()
+                    );
+            }
         });
     }
 
@@ -248,6 +249,25 @@ export class UltimateByHttp extends UltimateBase {
     }
 
     private resultIsWorthEmbedding(result: SingleUltimateResult): boolean {
-        return !(result.type === 'invariant' || result.type === 'syntaxError');
+        return true; //!(result.type === 'invariant' || result.type === 'syntaxError');
+    }
+
+    private getCommonHttpOptions() {
+        let defaultPort = this.apiUrl.protocol === 'http:' ? 80 : 443;
+        let headers: any = {
+            /* eslint-disable @typescript-eslint/naming-convention */
+            Accept: '*/*',
+            Connection: 'keep-alive',
+            /* eslint-enable @typescript-eslint/naming-convention */
+        };
+        let options = {
+            protocol: this.apiUrl.protocol,
+            hostname: this.apiUrl.hostname,
+            port: this.apiUrl.port || defaultPort,
+            path: this.apiUrl.pathname,
+            method: 'GET',
+            headers: headers,
+        };
+        return options;
     }
 }
