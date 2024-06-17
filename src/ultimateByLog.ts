@@ -6,6 +6,7 @@ import { SingleUltimateResult, UltimateBase } from './ultimate';
 export class UltimateByLog extends UltimateBase {
     private executable: path.ParsedPath;
     protected response = new UltimateResultParser('');
+    protected ultimateProcess: cp.ChildProcessWithoutNullStreams | null = null;
 
     constructor(
         context: vscode.ExtensionContext,
@@ -43,22 +44,22 @@ export class UltimateByLog extends UltimateBase {
 
             this.outputChannel.clear();
 
-            const ultimateProcess = cp.spawn(commandString, commandArgs, {
+            this.ultimateProcess = cp.spawn(commandString, commandArgs, {
                 cwd: cwd,
             });
             console.log('child process "Ultimate" started');
 
-            ultimateProcess.stdout.on('data', (stdout) => {
+            this.ultimateProcess.stdout.on('data', (stdout) => {
                 this.printStdoutToLog(stdout.toString());
                 ultimateOutput += stdout;
             });
 
-            ultimateProcess.stderr.on('data', (stderr) => {
+            this.ultimateProcess.stderr.on('data', (stderr) => {
                 this.printStdoutToLog(stderr.toString());
                 ultimateOutput += stderr;
             });
 
-            ultimateProcess.on('close', (code) => {
+            this.ultimateProcess.on('close', (code) => {
                 console.log(`child process exited with code ${code}`);
                 this.freeUltimate();
                 this.response = new UltimateResultParser(ultimateOutput);
@@ -104,6 +105,11 @@ export class UltimateByLog extends UltimateBase {
         }
     }
 
+    protected stopUltimate(): void {
+        this.ultimateProcess?.kill();
+        this.outputChannel.appendLine('Ultimate child process killed.');
+    }
+
     protected prepareDiagnosticInfo(document: vscode.TextDocument): vscode.Diagnostic[] {
         let diagnostics: vscode.Diagnostic[] = [];
         let relatedInformation: vscode.DiagnosticRelatedInformation[] = [];
@@ -146,7 +152,9 @@ const REGEX_UNPROVABLE =
     /UnprovableResult \[Line: (\d*)\]: (.*)\n (.*)\n Reason: (\D*)(\d*)((.|\n)*)\n\n/;
 const REGEX_COUNTEREXAMPLE =
     /CounterExampleResult \[Line: (\d*)\]: (.*)\n (.*)\n(\D*):(.*)((.|\n)*)\n\n/;
-const REGEX_UNSUPPORTED_SYNTAX = /UnsupportedSyntaxResult \[Line: (.*)\]: (.*)\n/;
+const REGEX_UNSUPPORTED_SYNTAX = /UnsupportedSyntaxResult \[Line: (\d*)\]: (.*)\n/;
+const REGEX_POSITIVE_RESULT = /PositiveResult \[Line: (\d*)\]: (.*)\n/;
+const REGEX_GENERIC_RESULT_AT_LOCATION = /GenericResultAtLocation \[Line: (\d*)\]: (.*)\n (.*)\n/;
 
 export class UltimateResultParser {
     public resultString: string = '';

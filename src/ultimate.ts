@@ -140,6 +140,13 @@ export abstract class UltimateBase implements Ultimate {
             (progress, token) => {
                 return new Promise((resolve) => {
                     this.progressCancellationToken = new vscode.CancellationTokenSource();
+                    token.onCancellationRequested(() => {
+                        this.progressCancellationToken?.dispose();
+                        this.progressCancellationToken = null;
+                        this.stopUltimate();
+                        resolve(null);
+                    });
+
                     this.progressCancellationToken.token.onCancellationRequested(() => {
                         this.progressCancellationToken?.dispose();
                         this.progressCancellationToken = null;
@@ -157,6 +164,8 @@ export abstract class UltimateBase implements Ultimate {
     protected stopShowingProgressInStatusBar(): void {
         this.progressCancellationToken?.cancel();
     }
+
+    protected abstract stopUltimate(): void;
 
     protected lockUltimate(): boolean {
         if (!this.ultimateIsRunning) {
