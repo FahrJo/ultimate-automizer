@@ -7,13 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.3] - 2024-07-27
+
+- add ability to stop ongoing verification
+- bugfixes
+- dependency updates
+
 ## [0.2.2] - 2023-11-02
 
-- Add support for highlighting assertions where context from Ultimate is missing
+- add support for highlighting assertions where context from Ultimate is missing
 
 ## [0.2.0] - 2023-06-03
 
-- Change to new REST-API of Ultimate
+- change to new REST-API of Ultimate
 
 ## [0.1.2] - 2023-04-18
 
@@ -28,4 +34,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.1.0] - 2023-04-04
 
-- Initial release
+- initial release
