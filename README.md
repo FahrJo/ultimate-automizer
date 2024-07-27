@@ -35,6 +35,10 @@ This extension contributes the following settings:
 
 ## Release Notes
 
+### 0.2.3
+
+Add ability to stop ongoing verification, bugfixes and dependency updates
+
 ### 0.2.2
 
 Add support for highlighting assertions where context from Ultimate is missing
